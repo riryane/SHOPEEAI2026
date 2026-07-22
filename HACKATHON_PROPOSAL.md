@@ -8,39 +8,37 @@ To practically improve Shopee’s delivery efficiency within a hackathon timefra
 ## 🏛️ Strategic Pillars & Technical Scope
 
 ### Major Point 1: Predictive Delivery Success Probability Engine (24-Hour MVP)
-- **Objective**: Deploy a lightweight, fast classification engine (XGBoost / Random Forest + Address Rules) that processes incoming delivery orders at checkout using existing operational data.
+- **Objective**: Deploy a lightweight, fast classification engine (XGBoost / Random Forest + Address Rules) that processes incoming delivery orders at checkout using existing operational data in Supabase.
 - **Functionality**: Calculates a real-time **Delivery Success Probability Score (0 - 100%)** and flags high-risk parcels (e.g., `hub backlog`, `routing delay`, `customer not available`) **before** dispatch from the fulfillment hub.
-- **Backend API**: Exposes a REST endpoint `/api/v1/score-delivery` consuming Supabase `parcel_history` and `hub_daily_operations` records.
+- **Backend API**: Exposes a REST endpoint `/api/v1/score-delivery` consuming Supabase `parcel_history` (11,999 rows) and `hub_daily_operations` (252 rows) records for model training.
 
 ### Major Point 2: Rapid Data Pipeline & Edge-Case Handling
 - **Challenge**: Overcoming unstructured text addresses, missing landmarks, and edge cases where address quality is high but customer COD availability is low.
 - **Strategy**: 
-  - Standardize text parsing via Regex + Levenshtein distance metrics on existing parcel data.
-  - Combine spatial/zone features (`origin_zone` -> `destination_zone`) with historic customer behavioral metrics (`attempt_count`, `service_type`, `was_late`).
-  - Pre-calculate risk buckets (`LOW_RISK`, `HIGH_RISK`) stored directly in Supabase for sub-50ms queries.
+  - Standardize text parsing via Regex + Levenshtein distance metrics on historical customer drop-offs.
+  - Combine spatial/zone features (`origin_zone` -> `destination_zone`) with customer payment metrics (`COD` vs `PREPAID`, attempt count, past failures).
+  - Pre-calculate risk buckets (`LOW_RISK`, `MEDIUM_RISK`, `HIGH_RISK`) for sub-50ms query response.
 
 ### Major Point 3: Rider App Integration & Automated Pre-Verification
-- **Prototyping Strategy**: Seamlessly display risk scores and warning badges (`HIGH RISK`, `Hub Backlog Risk`, `Routing Delay`) directly inside our built Shopee Express Rider App (`dashboard.html` & `details.html`).
-- **Rider Workflow**: Triggers automated SMS / verification prompts to high-risk customers prior to rider dispatch, ensuring customer availability and drastically reducing costly last-mile re-deliveries.
+- **Prototyping Strategy**: Hardcoded 1 Rider frontend interface displaying 4 Customer Delivery Scenarios (2 Good History, 2 Bad/High-Risk History).
+- **Rider Workflow**: Displays risk scores and warning badges (`HIGH RISK`, `Missing unit number`, `GPS Mismatch`) directly on `dashboard.html` and `details.html`. Triggers automated SMS / verification prompts to high-risk customers prior to rider dispatch.
 
 ---
 
-## 👥 Demo Case Study: 1 Driver & 4 Exact Parcels Extracted From Dataset
+## 👥 Demo Case Study Architecture: 1 Rider & 4 Customer Profiles
 
-To prove end-to-end functionality to hackathon judges, our demo uses **1 Driver Workload** and **4 Exact Historical Parcels** extracted directly from `parcel_history` and `hub_daily_operations` in Supabase:
+### 🛵 Assigned Front-End Rider:
+- **Rider**: **Rider Juan** (Hardcoded 1 Rider view in `dashboard.html`)
+- **Hub**: `HUB_A_NORTH` (Cainta, Rizal)
 
-### 🛵 Assigned Driver Workload Context:
-- **Hub**: `HUB_A_NORTH` (Metro North Urban Hub)
-- **Rider Allocation**: 15 Active Riders handling 45 parcels/day (Workload: ~22 parcels/rider)
+### 📦 4 Customer Test Scenarios (Displayed in Rider App):
 
-### 📦 4 Test Parcels (Extracted Verbatim from `parcel_history`):
-
-| Parcel ID | Hub ID | Destination | Service Type | Seller Segment | Outcome | Failure Reason / Status | Risk Level | ML Score | Triggered Action |
-|---|---|---|---|---|---|---|---|---|---|
-| `P0000001` | `HUB_A_NORTH` | Metro | Economy | Marketplace | `delivered_on_time` | Delivered (Attempt 1) | 🟢 **LOW RISK** | **94%** | Standard Dispatch |
-| `P0000003` | `HUB_A_NORTH` | Metro | Standard | Enterprise | `delivered_on_time` | Delivered (Attempt 1) | 🟢 **LOW RISK** | **98%** | Standard Dispatch |
-| `P0000012` | `HUB_A_NORTH` | Metro | Standard | Marketplace | `failed` | `hub backlog` | 🔴 **HIGH RISK** | **24%** | Priority Sorting Prompt |
-| `P0000014` | `HUB_A_NORTH` | Metro | Standard | Direct Seller | `failed` | `routing delay` (3 attempts) | 🔴 **HIGH RISK** | **18%** | Route Verification & Call Prompt |
+| Customer ID | Name | Payment | Address & Notes | Delivery History | Risk Level | ML Score | Triggered Action |
+|---|---|---|---|---|---|---|---|
+| `CUST_001` | **Juan Dela Cruz** | COD (₱245.00) | Blk 4 Lot 12, Brgy. San Isidro, Cainta, Rizal | 12 Successful / 0 Failed | 🟢 **LOW RISK** | **94%** | Standard Dispatch |
+| `CUST_002` | **Maria Santos** | PREPAID | 123 Mabini St., Brgy. Mabini, Cainta, Rizal | 18 Successful / 0 Failed | 🟢 **LOW RISK** | **98%** | Standard Dispatch |
+| `CUST_003` | **Alex Reyes** | COD (₱560.00) | 28 Sunrise St., Brgy. San Isidro, Cainta, Rizal | 1 Successful / 3 Failed (COD Unavailable) | 🔴 **HIGH RISK** | **22%** | SMS Pre-Verification & Call Prompt |
+| `CUST_004` | **Mark Bautista** | PREPAID | 91 East Rd., Brgy. Sta. Clara, Cainta, Rizal | 2 Successful / 2 Failed (Bad Address / No Unit) | 🟡 **MEDIUM RISK** | **45%** | Address Unit Verification Prompt |
 
 ---
 
@@ -64,8 +62,8 @@ To prove end-to-end functionality to hackathon judges, our demo uses **1 Driver 
 [ ML Risk Scoring Engine (XGBoost / FastAPI) ] ◄──► [ Supabase PostgreSQL DB ]
              │                                        - parcel_history (11,999 rows)
              ▼                                        - hub_daily_operations (252 rows)
-[ Shopee Express Rider App (HTML5/CSS3/JS) ]          - cost_inputs / solution_menu
-  ├── dashboard.html (Parcel List & Filters)
+[ Shopee Express Rider App (1 Hardcoded Rider View) ] - cost_inputs / solution_menu
+  ├── dashboard.html (4 Customer Delivery List: 2 Good / 2 Bad History)
   ├── details.html (High Risk Badges & Optimal Timing)
   ├── status.html (Choose Outcome)
   └── reason.html (Failure Analysis & AI Feedback)
