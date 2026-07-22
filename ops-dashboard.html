@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPX Delivery Risk Monitor — Ops Dashboard</title>
+  <title>SPX Delivery Ops Center — Risk Monitor</title>
   <link rel="stylesheet" href="assets/css/ops-dashboard.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -25,8 +25,10 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <div class="brand-logo">
-          <img src="assets/images/shopee_express_logo.png" alt="SPX" class="brand-img">
+        <div class="brand-icon">SPX</div>
+        <div class="brand-text">
+          <span class="brand-title">Delivery</span>
+          <span class="brand-sub">OPS CENTER</span>
         </div>
       </div>
       <nav class="sidebar-nav">
@@ -41,6 +43,11 @@
         <a href="#" class="nav-link">
           <i data-lucide="flag-triangle-right"></i>
           <span>Flagged Parcels</span>
+          <span class="nav-badge" id="navFlaggedBadge">47</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i data-lucide="bike"></i>
+          <span>Riders</span>
         </a>
         <a href="#" class="nav-link">
           <i data-lucide="settings"></i>
@@ -48,9 +55,15 @@
         </a>
       </nav>
       <div class="sidebar-footer">
-        <div class="sync-status" id="syncStatus">
-          <div class="sync-dot"></div>
-          <span class="sync-text">Syncing...</span>
+        <div class="user-profile">
+          <div class="user-avatar">OC</div>
+          <div class="user-info">
+            <span class="user-name">Ops Controller</span>
+            <span class="user-role">SG · Cluster A</span>
+          </div>
+          <button class="user-more-btn">
+            <i data-lucide="more-horizontal" style="width:16px;height:16px"></i>
+          </button>
         </div>
       </div>
     </aside>
@@ -60,54 +73,98 @@
       <!-- Top Bar -->
       <header class="topbar">
         <div class="topbar-left">
-          <div class="hub-filter">
-            <select id="hubFilter" class="hub-select">
-              <option value="ALL">All Hubs</option>
-              <option value="HUB_A_NORTH">HUB_A_NORTH</option>
-              <option value="HUB_B_CENTRAL">HUB_B_CENTRAL</option>
-              <option value="HUB_C_SOUTH">HUB_C_SOUTH</option>
-              <option value="HUB_D_EAST">HUB_D_EAST</option>
-              <option value="HUB_E_WEST">HUB_E_WEST</option>
-              <option value="HUB_F_RIVER">HUB_F_RIVER</option>
-            </select>
+          <div class="search-box">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" placeholder="Search parcel, hub, rider..." class="search-input" id="globalSearch">
+            <kbd class="search-kbd">⌘K</kbd>
           </div>
+          <select id="hubFilter" class="hub-select">
+            <option value="ALL">All Hubs</option>
+            <option value="HUB_A_NORTH">HUB_A_NORTH</option>
+            <option value="HUB_B_CENTRAL">HUB_B_CENTRAL</option>
+            <option value="HUB_C_SOUTH">HUB_C_SOUTH</option>
+            <option value="HUB_D_EAST">HUB_D_EAST</option>
+            <option value="HUB_E_WEST">HUB_E_WEST</option>
+            <option value="HUB_F_RIVER">HUB_F_RIVER</option>
+          </select>
           <div class="date-filter">
-            <button class="date-btn active" data-range="today">Latest Day</button>
+            <button class="date-btn active" data-range="today">Today</button>
             <button class="date-btn" data-range="7d">7 Days</button>
             <button class="date-btn" data-range="30d">30 Days</button>
           </div>
         </div>
         <div class="topbar-right">
-          <span class="last-synced" id="lastSynced">Last synced: —</span>
-          <button class="refresh-btn" id="refreshBtn" title="Refresh now">
-            <i data-lucide="refresh-cw"></i>
+          <button class="topbar-btn" id="exportBtn">
+            <i data-lucide="download" style="width:15px;height:15px"></i>
+            <span>Export</span>
           </button>
+          <button class="topbar-icon-btn" id="notifBtn">
+            <i data-lucide="bell" style="width:17px;height:17px"></i>
+            <span class="notif-dot"></span>
+          </button>
+          <div class="sync-pill" id="syncPill">
+            <span class="sync-dot-inline"></span>
+            <span class="sync-text" id="lastSynced">Synced 2m ago</span>
+          </div>
         </div>
       </header>
 
       <!-- Content Body -->
       <div class="content-body">
         <div class="content-main">
+          <!-- Operations Overview Header -->
+          <div class="ops-header">
+            <div class="ops-header-left">
+              <h1 class="ops-title">Operations Overview</h1>
+              <p class="ops-subtitle" id="opsDate">Loading...</p>
+            </div>
+            <div class="live-badge">
+              <span class="live-dot"></span> Live
+            </div>
+          </div>
+
           <!-- Stat Row -->
           <section class="stat-row">
             <div class="stat-card" id="statTotalParcels">
-              <div class="stat-label">TOTAL PARCELS</div>
+              <div class="stat-card-top">
+                <div class="stat-icon stat-icon-green">
+                  <i data-lucide="package" style="width:18px;height:18px"></i>
+                </div>
+                <div class="stat-sparkline" id="sparkTotal"></div>
+              </div>
               <div class="stat-value skeleton-text">—</div>
+              <div class="stat-label">TOTAL PARCELS</div>
               <div class="stat-trend" id="trendTotalParcels"></div>
             </div>
-            <div class="stat-card" id="statFailedRate">
-              <div class="stat-label">FAILED/DELAYED RATE</div>
+            <div class="stat-card stat-card-alert" id="statSuccessRate">
+              <div class="stat-card-top">
+                <div class="stat-icon stat-icon-red">
+                  <i data-lucide="target" style="width:18px;height:18px"></i>
+                </div>
+                <span class="stat-alert-badge" id="alertBadge">● Action needed</span>
+              </div>
               <div class="stat-value skeleton-text">—</div>
-              <div class="stat-trend" id="trendFailedRate"></div>
+              <div class="stat-label">SUCCESS RATE</div>
+              <div class="stat-trend" id="trendSuccessRate"></div>
             </div>
             <div class="stat-card" id="statFlagged">
-              <div class="stat-label">FLAGGED HIGH-RISK</div>
+              <div class="stat-card-top">
+                <div class="stat-icon stat-icon-amber">
+                  <i data-lucide="alert-triangle" style="width:18px;height:18px"></i>
+                </div>
+              </div>
               <div class="stat-value skeleton-text">—</div>
+              <div class="stat-label">HIGH-RISK FLAGGED</div>
               <div class="stat-trend" id="trendFlagged"></div>
             </div>
             <div class="stat-card" id="statResolution">
-              <div class="stat-label">AVG RESOLUTION TIME</div>
+              <div class="stat-card-top">
+                <div class="stat-icon stat-icon-teal">
+                  <i data-lucide="clock" style="width:18px;height:18px"></i>
+                </div>
+              </div>
               <div class="stat-value skeleton-text">—</div>
+              <div class="stat-label">AVG RESOLUTION</div>
               <div class="stat-trend" id="trendResolution"></div>
             </div>
           </section>
@@ -115,9 +172,12 @@
           <!-- Hub Performance Table -->
           <section class="section-block">
             <div class="section-header">
-              <h2 class="section-title">Hub Performance</h2>
+              <div class="section-header-left">
+                <h2 class="section-title">Hub Performance</h2>
+                <span class="section-meta" id="hubMeta">Real-time delivery metrics · 6 active hubs</span>
+              </div>
               <button class="filter-table-btn" id="sortToggle">
-                <i data-lucide="arrow-up-down" style="width:14px;height:14px"></i> Sort
+                <i data-lucide="sliders-horizontal" style="width:14px;height:14px"></i> Filter
               </button>
             </div>
             <div class="table-wrapper">
@@ -127,19 +187,19 @@
                     <th data-sort="hub">HUB</th>
                     <th data-sort="volume">VOLUME</th>
                     <th data-sort="staffing">STAFFING</th>
-                    <th data-sort="failedRate">FAILED RATE</th>
-                    <th data-sort="flagged">FLAGGED %</th>
-                    <th data-sort="trend">TREND</th>
+                    <th data-sort="failedRate">FAILED %</th>
+                    <th data-sort="flagged">FLAGGED</th>
+                    <th data-sort="sla">SLA</th>
+                    <th data-sort="trend">7D TREND</th>
                   </tr>
                 </thead>
                 <tbody id="hubTableBody">
-                  <!-- Loading skeletons -->
-                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
                 </tbody>
               </table>
             </div>
@@ -148,11 +208,13 @@
           <!-- Failure Reason Breakdown -->
           <section class="section-block">
             <div class="section-header">
-              <h2 class="section-title">Failure Reason Breakdown</h2>
-              <span class="section-subtitle" id="chartHubLabel">All Hubs</span>
+              <div class="section-header-left">
+                <h2 class="section-title">Failure Reason Breakdown</h2>
+                <span class="section-meta" id="chartHubLabel">All Hubs</span>
+              </div>
             </div>
             <div class="chart-container">
-              <canvas id="failureChart" height="220"></canvas>
+              <canvas id="failureChart" height="200"></canvas>
               <div class="chart-skeleton" id="chartSkeleton">
                 <div class="skeleton-bar" style="width:80%;height:24px"></div>
                 <div class="skeleton-bar" style="width:60%;height:24px"></div>
@@ -167,11 +229,19 @@
         <!-- Right Sidebar: Flagged Queue -->
         <aside class="flagged-sidebar">
           <div class="flagged-header">
-            <h3>Flagged Queue <span class="flagged-count" id="flaggedCount">(0)</span></h3>
+            <div class="flagged-header-left">
+              <h3>Flagged Queue</h3>
+              <span class="flagged-summary" id="flaggedSummary">0 open · 0 escalated</span>
+            </div>
             <a href="#" class="view-all-link">View all</a>
           </div>
+          <div class="flagged-tabs">
+            <button class="flagged-tab active" data-severity="all">All</button>
+            <button class="flagged-tab" data-severity="high">High</button>
+            <button class="flagged-tab" data-severity="med">Med</button>
+            <button class="flagged-tab" data-severity="low">Low</button>
+          </div>
           <div class="flagged-list" id="flaggedList">
-            <!-- Loading skeletons -->
             <div class="flagged-skeleton">
               <div class="skeleton-bar" style="width:70%"></div>
               <div class="skeleton-bar" style="width:50%"></div>
@@ -187,6 +257,18 @@
             <div class="flagged-skeleton">
               <div class="skeleton-bar" style="width:70%"></div>
               <div class="skeleton-bar" style="width:50%"></div>
+            </div>
+          </div>
+          <div class="flagged-footer">
+            <div class="resolution-tracker">
+              <div class="resolution-header">
+                <span class="resolution-label">Resolution today</span>
+                <span class="resolution-count" id="resolutionCount">0 / 0</span>
+              </div>
+              <div class="resolution-bar">
+                <div class="resolution-fill" id="resolutionFill" style="width:0%"></div>
+              </div>
+              <span class="resolution-sub" id="resolutionSub">—</span>
             </div>
           </div>
         </aside>
