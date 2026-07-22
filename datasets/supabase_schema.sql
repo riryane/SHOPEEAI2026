@@ -63,11 +63,3 @@ CREATE INDEX IF NOT EXISTS idx_parcel_date ON parcel_history(date);
 CREATE INDEX IF NOT EXISTS idx_parcel_outcome ON parcel_history(delivery_outcome);
 CREATE INDEX IF NOT EXISTS idx_parcel_late ON parcel_history(was_late);
 CREATE INDEX IF NOT EXISTS idx_parcel_zones ON parcel_history(origin_zone, destination_zone);
-
--- Enable Row Level Security (RLS)
-ALTER TABLE hub_daily_operations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE parcel_history ENABLE ROW LEVEL SECURITY;
-
--- Allow Public Read Access for Analytics Dashboard
-CREATE POLICY "Allow public read on hub_daily_operations" ON hub_daily_operations FOR SELECT USING (true);
-CREATE POLICY "Allow public read on parcel_history" ON parcel_history FOR SELECT USING (true);
