@@ -1,7 +1,17 @@
 # 🚀 Hackathon Proposal: Shopee Express AI-Powered Delivery Risk Scoring & Rider Optimization System
 
 ## 🎯 Thesis Statement
-To practically improve Shopee’s delivery efficiency within a hackathon timeframe, we will integrate an **LLM AI API scoring system** that flags high-risk delivery parcels at checkout, prioritizes real-time rider verification prompts for ambiguous locations, and provides a front-end dashboard predicting optimal customer delivery windows.
+To practically improve Shopee’s delivery efficiency within a hackathon timeframe, we integrate an **XGBoost + Random Forest Machine Learning Model** combined with **Mistral AI LLM API** that flags high-risk delivery parcels at checkout, predicts optimal delivery windows, and triggers automated pre-verification SMS prompts for last-mile riders.
+
+---
+
+## 🏛️ Machine Learning Architecture: XGBoost vs. Random Forest vs. Mistral LLM
+
+| AI Engine | Machine Learning Algorithm | Primary Role in System | Output Data / Metric |
+|---|---|---|---|
+| 🚀 **XGBoost** | Gradient Boosted Decision Trees | **Numerical Risk Scoring Engine** | Calculates sub-10ms **Delivery Success Probability Scores** (`70.6%`, `92.9%`, `45.1%`, `25.7%`). |
+| 🌲 **Random Forest** | Bagging Ensemble of Decision Trees | **Statistical Feature Importance & Probabilities** | Computes statistical feature weights (`customer_contact_made`: 9.6%, `attempt_count`: 5.16%) & time-slot conditional probabilities. |
+| 🤖 **Mistral AI** | LLM (`mistral-small-latest`) | **Generative Text Parsing & Pre-Verification SMS** | Parses messy text addresses & generates customer SMS pre-verification prompts. |
 
 ---
 
@@ -10,7 +20,7 @@ To practically improve Shopee’s delivery efficiency within a hackathon timefra
 ### Major Point 1: Predictive Parcel Success Probability Engine (24-Hour MVP)
 - **AI Training Strategy (Global Network Training)**: The AI scoring engine is trained on **all 6 hubs (11,999 parcel rows + 252 hub operating logs)** in Supabase to capture global logistics failure patterns (volume spikes, weather sensitivity, weight/size risk).
 - **Pilot Implementation Strategy (Single Hub Focus)**: While the AI is trained network-wide, our operational MVP pilot is deployed on **1 single hub (`HUB_A_NORTH`)** for controlled last-mile execution.
-- **Backend API**: Exposes a REST endpoint `/api/v1/score-delivery` calculating real-time **Delivery Success Probability Scores (0 - 100%)**.
+- **Backend API**: Exposes a REST endpoint `/api/v1/parcels` calculating real-time **Delivery Success Probability Scores (0 - 100%)**.
 
 ### Major Point 2: Rapid Data Pipeline & Edge-Case Handling
 - **Challenge**: Overcoming operational bottlenecks such as hub sorting backlogs, routing delays, and customer unavailability without creating external datasets.
@@ -21,7 +31,7 @@ To practically improve Shopee’s delivery efficiency within a hackathon timefra
 
 ### Major Point 3: Rider App Integration & Automated Pre-Verification
 - **Prototyping Strategy**: Hardcoded 1 Rider frontend interface displaying 4 Real Parcels from `HUB_A_NORTH` extracted directly from `parcel_history.csv`.
-- **Rider Workflow**: Displays risk scores and warning badges (`HIGH RISK`, `Hub Backlog Risk`, `Routing Delay`) directly on `dashboard.html` and `details.html`. Triggers automated SMS / verification prompts to high-risk customers prior to rider dispatch.
+- **Rider Workflow**: Displays risk scores directly on `dashboard.html` and `details.html`. Triggers automated SMS / verification prompts to high-risk customers prior to rider dispatch.
 
 ---
 
@@ -81,22 +91,21 @@ The **AI Timing Suggestion Engine** combines historical probability math from `h
                                      │
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 2. AI / ML SCORING ENGINE (Trained Globally on All 6 Hubs)                  │
-│    - Learns network-wide failure drivers (backlog, routing, weather).       │
-│    - Calculates Delivery Success Probability (e.g. 92.9% vs 25.7%).        │
-│    - Predicts Optimal Delivery Timing Windows (11-1pm, 2-4pm, 9-11am).      │
+│ 2. MACHINE LEARNING ENGINE (XGBoost + Random Forest)                        │
+│    - XGBoost: Real-time Numerical Risk Scoring (e.g. 92.9% vs 25.7%).        │
+│    - Random Forest: Feature importance weights & conditional probabilities.│
 └────────────────────────────────────┬────────────────────────────────────────┘
                                      │
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 3. MISTRAL AI LLM LAYER (mistral-small-latest)                               │
+│ 3. MISTRAL AI LLM LAYER (mistral-small-latest)                              │
 │    - Parses address anomalies & drafts customer pre-verification SMS text.  │
 └────────────────────────────────────┬────────────────────────────────────────┘
                                      │
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 4. RIDER APP FRONTEND (dashboard.html -> details.html -> status -> reason)   │
+│ 4. RIDER APP FRONTEND (dashboard.html -> details.html -> status -> reason)  │
 │    - 1 Hardcoded Rider presenting the 4 parcel cards for HUB_A_NORTH.       │
-│    - Displays AI Risk Scores, Badges, and Dynamic AI Timing Suggestions.   │
+│    - Displays AI Risk Scores, Vector Indicators, and Optimal Timing Window. │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
