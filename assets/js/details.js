@@ -1,4 +1,4 @@
-// Shopee Express Rider App - Dynamic & Automated Live AI Details Logic
+// Shopee Express Rider App - Dynamic & Instantaneous AI Details Logic (0ms Render)
 
 const API_BASE_URL = "http://localhost:8000";
 
@@ -31,8 +31,8 @@ const PARCEL_DATA_MAP = {
   },
   "SPX0987654321": {
     parcelId: "P0000003",
-    trackingNo: "SPX0987654321",
     name: "Maria Santos",
+    trackingNo: "SPX0987654321",
     phone: "+63 918 234 5678",
     payment: "PREPAID",
     price: "₱0.00 (Prepaid)",
@@ -109,39 +109,8 @@ const PARCEL_DATA_MAP = {
   }
 };
 
-document.addEventListener('DOMContentLoaded', async () => {
-  // Read tracking number from URL query string or localStorage
-  const urlParams = new URLSearchParams(window.location.search);
-  const trackingParam = urlParams.get('tracking') || localStorage.getItem('selectedTracking') || "SPX1234567890";
-  
-  let data = PARCEL_DATA_MAP[trackingParam] || PARCEL_DATA_MAP["SPX1234567890"];
-
-  // AUTOMATIC LIVE BACKEND FETCH
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/v1/parcels/${trackingParam}`);
-    if (response.ok) {
-      const resJson = await response.json();
-      const info = resJson.parcel_info;
-      const ai = resJson.ai_analysis;
-
-      data.name = info.customer_name;
-      data.address = info.address;
-      data.payment = info.payment_method;
-      data.price = info.price;
-      data.aiScore = `${info.ml_success_score}%`;
-      
-      if (ai) {
-        if (ai.sms_prompt) data.smsPrompt = ai.sms_prompt;
-        if (ai.address_issue) data.warningPill = ai.address_issue;
-        if (ai.recommended_time_slot) data.timingSlot = ai.recommended_time_slot;
-      }
-      console.log("⚡ Successfully fetched live backend AI predictions from FastAPI!");
-    }
-  } catch (err) {
-    console.warn("Backend API offline, using dynamic dataset mapping:", err);
-  }
-
-  // Populate HTML elements dynamically
+function renderUI(data) {
+  // Populate HTML elements INSTANTLY
   document.getElementById('trackingNumText').textContent = `${data.trackingNo} (${data.parcelId})`;
   document.getElementById('customerNameText').textContent = data.name;
   document.getElementById('customerPhoneText').textContent = data.phone;
@@ -192,17 +161,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('timingSubText').textContent = data.timingSub;
 
   // Copy tracking button
-  document.getElementById('copyBtn').addEventListener('click', () => {
+  document.getElementById('copyBtn').onclick = () => {
     navigator.clipboard.writeText(data.trackingNo);
     alert(`Tracking number ${data.trackingNo} copied!`);
-  });
+  };
 
   // Action Buttons (Call / SMS Pre-Verification)
   const smsBtn = document.getElementById('smsBtn');
   if (smsBtn) {
-    smsBtn.addEventListener('click', () => {
+    smsBtn.onclick = () => {
       alert(`[Automated Mistral AI Pre-Verification SMS]\n\nTo: ${data.name} (${data.phone})\n\n"${data.smsPrompt}"`);
-    });
+    };
   }
 
   // Update status.html link with tracking param
@@ -210,4 +179,38 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (chooseStatusBtn) {
     chooseStatusBtn.href = `status.html?tracking=${data.trackingNo}`;
   }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const trackingParam = urlParams.get('tracking') || localStorage.getItem('selectedTracking') || "SPX1234567890";
+  
+  let data = PARCEL_DATA_MAP[trackingParam] || PARCEL_DATA_MAP["SPX1234567890"];
+
+  // 1. INSTANT 0ms DOM RENDER
+  renderUI(data);
+
+  // 2. NON-BLOCKING SILENT BACKGROUND BACKEND SYNC
+  fetch(`${API_BASE_URL}/api/v1/parcels/${trackingParam}`)
+    .then(res => res.ok ? res.json() : null)
+    .then(resJson => {
+      if (resJson) {
+        const info = resJson.parcel_info;
+        const ai = resJson.ai_analysis;
+
+        data.name = info.customer_name;
+        data.address = info.address;
+        data.payment = info.payment_method;
+        data.price = info.price;
+        data.aiScore = `${info.ml_success_score}%`;
+        
+        if (ai) {
+          if (ai.sms_prompt) data.smsPrompt = ai.sms_prompt;
+          if (ai.address_issue) data.warningPill = ai.address_issue;
+          if (ai.recommended_time_slot) data.timingSlot = ai.recommended_time_slot;
+        }
+        renderUI(data);
+      }
+    })
+    .catch(() => {});
 });
