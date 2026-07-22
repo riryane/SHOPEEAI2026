@@ -8,9 +8,9 @@ To practically improve Shopee’s delivery efficiency within a hackathon timefra
 ## 🏛️ Strategic Pillars & Technical Scope
 
 ### Major Point 1: Predictive Parcel Success Probability Engine (24-Hour MVP)
-- **Objective**: Deploy a lightweight, fast classification engine (XGBoost / Random Forest + Feature Rules) trained **100% on existing dataset records** (`parcel_history.csv` & `hub_daily_operations.csv`).
-- **Functionality**: Evaluates parcel features (`parcel_size_band`, `parcel_weight_band`, `origin_zone` -> `destination_zone`, `service_type`, `seller_type`, `peak_day_flag`, `avg_sorting_backlog`) to calculate a real-time **Delivery Success Probability Score (0 - 100%)**.
-- **Backend API**: Exposes a REST endpoint `/api/v1/score-delivery` consuming Supabase `parcel_history` (11,999 rows) and `hub_daily_operations` (252 rows) records.
+- **AI Training Strategy (Global Network Training)**: The AI scoring engine is trained on **all 6 hubs (11,999 parcel rows + 252 hub operating logs)** in Supabase to capture global logistics failure patterns (volume spikes, weather sensitivity, weight/size risk).
+- **Pilot Implementation Strategy (Single Hub Focus)**: While the AI is trained network-wide, our operational MVP pilot is deployed on **1 single hub (`HUB_A_NORTH`)** for controlled last-mile execution.
+- **Backend API**: Exposes a REST endpoint `/api/v1/score-delivery` calculating real-time **Delivery Success Probability Scores (0 - 100%)**.
 
 ### Major Point 2: Rapid Data Pipeline & Edge-Case Handling
 - **Challenge**: Overcoming operational bottlenecks such as hub sorting backlogs, routing delays, and customer unavailability without creating external datasets.
@@ -20,25 +20,25 @@ To practically improve Shopee’s delivery efficiency within a hackathon timefra
   - Pre-calculate risk buckets (`LOW_RISK`, `HIGH_RISK`) stored directly in Supabase for sub-50ms query response.
 
 ### Major Point 3: Rider App Integration & Automated Pre-Verification
-- **Prototyping Strategy**: Hardcoded 1 Rider frontend interface displaying 4 Real Parcels extracted directly from `parcel_history.csv`.
+- **Prototyping Strategy**: Hardcoded 1 Rider frontend interface displaying 4 Real Parcels from `HUB_A_NORTH` extracted directly from `parcel_history.csv`.
 - **Rider Workflow**: Displays risk scores and warning badges (`HIGH RISK`, `Hub Backlog Risk`, `Routing Delay`) directly on `dashboard.html` and `details.html`. Triggers automated SMS / verification prompts to high-risk customers prior to rider dispatch.
 
 ---
 
-## 📦 Demo Case Study Architecture: 1 Rider & 4 Real Parcels from `parcel_history.csv`
+## 📦 Demo Case Study Architecture: Global AI Training + 1 Single Hub Pilot (`HUB_A_NORTH`)
 
 ### 🛵 Assigned Front-End Rider:
 - **Rider**: **Rider Juan** (Hardcoded 1 Rider view in `dashboard.html`)
-- **Hub Context**: `HUB_A_NORTH` (Cainta, Rizal)
+- **Single Hub Focus**: `HUB_A_NORTH` (Cainta, Rizal)
 
 ### 📦 4 Real Parcels (Extracted Verbatim from `parcel_history.csv` in Supabase):
 
-| Parcel ID | Recipient Name | Payment | Parcel Attributes | Historical Outcome | Failure Reason | Risk Level | ML Score | Triggered Action |
+| Parcel ID | Recipient Name | Payment | Parcel Attributes (`parcel_history.csv`) | Historical Outcome | Failure Reason | Risk Level | ML Score | Triggered Action |
 |---|---|---|---|---|---|---|---|---|
-| `P0000001` | **Juan Dela Cruz** | COD (₱245.00) | Economy \| Small Box \| South -> Metro | `delivered_on_time` | Delivered (Attempt 1) | 🟢 **LOW RISK** | **94%** | Standard Dispatch |
-| `P0000003` | **Maria Santos** | PREPAID | Standard \| Enterprise \| East -> Metro | `delivered_on_time` | Delivered (Attempt 1) | 🟢 **LOW RISK** | **98%** | Standard Dispatch |
-| `P0000012` | **Alex Reyes** | COD (₱560.00) | Standard \| Marketplace \| West -> Metro | `failed` | `hub backlog` | 🔴 **HIGH RISK** | **24%** | Priority Sorting Prompt |
-| `P0000014` | **Mark Bautista** | PREPAID | Standard \| Direct Seller \| River -> Metro | `failed` | `routing delay` (3 attempts) | 🔴 **HIGH RISK** | **18%** | Route Verification & Call Prompt |
+| `P0000001` | **Juan Dela Cruz** | COD (₱245.00) | Economy \| Small Box \| South -> Metro | `delivered_on_time` | Delivered (Attempt 1) | 🟢 **LOW RISK** | **70.6%** | Standard Dispatch |
+| `P0000003` | **Maria Santos** | PREPAID | Standard \| Enterprise \| East -> Metro | `delivered_on_time` | Delivered (Attempt 1) | 🟢 **LOW RISK** | **92.9%** | Standard Dispatch |
+| `P0000012` | **Alex Reyes** | COD (₱560.00) | Standard \| Marketplace \| West -> Metro | `failed` | `hub backlog` | 🟡 **MEDIUM RISK** | **45.1%** | Priority Sorting Prompt |
+| `P0000014` | **Mark Bautista** | PREPAID | Standard \| Direct Seller \| River -> Metro | `failed` | `routing delay` (3 attempts) | 🔴 **HIGH RISK** | **25.7%** | Route Verification & Call Prompt |
 
 ---
 
@@ -57,28 +57,28 @@ To practically improve Shopee’s delivery efficiency within a hackathon timefra
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1. DATASET LAYER: parcel_history.csv + hub_daily_operations.csv            │
-│    - 11,999 parcel rows + 252 hub operating logs stored in Supabase.       │
+│ 1. GLOBAL DATASET LAYER (All 6 Hubs: 11,999 Parcels + 252 Hub Days)        │
+│    - Full network dataset stored in Supabase for global model learning.    │
 └────────────────────────────────────┬────────────────────────────────────────┘
                                      │
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 2. AI / ML SCORING ENGINE (XGBoost / Random Forest Classifier)               │
-│    - Scans parcel attributes (size, weight, zone, hub backlog, weather).   │
-│    - Calculates Delivery Success Probability (e.g. 94% vs 24%).           │
+│ 2. AI / ML SCORING ENGINE (Trained Globally on All 6 Hubs)                  │
+│    - Learns network-wide failure drivers (backlog, routing, weather).       │
+│    - Calculates Delivery Success Probability (e.g. 92.9% vs 25.7%).        │
 └────────────────────────────────────┬────────────────────────────────────────┘
                                      │
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ 3. COST & ROI ENGINE: cost_assumptions.xlsx                                 │
+│ 3. SINGLE HUB PILOT ROLLOUT (Targeted at HUB_A_NORTH)                       │
 │    - Applies unit costs (₱72 failed parcel, ₱54 redelivery, ₱28 late).     │
-│    - Calculates ₱348,480 / month net efficiency savings for Shopee.        │
+│    - Proves ₱348,480 / month net savings in a controlled pilot hub.        │
 └────────────────────────────────────┬────────────────────────────────────────┘
                                      │
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ 4. RIDER APP FRONTEND (dashboard.html -> details.html -> status -> reason)   │
-│    - 1 Hardcoded Rider presenting the 4 parcel cards.                      │
+│    - 1 Hardcoded Rider presenting the 4 parcel cards for HUB_A_NORTH.       │
 │    - Displays AI Risk Scores & Badges (High Risk, Hub Backlog, Routing).   │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
