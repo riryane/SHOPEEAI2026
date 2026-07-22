@@ -76,10 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Parcel Card Click -> Navigate to details.html
+  // Parcel Card Click -> Navigate to details.html with tracking parameter
   parcelCards.forEach(card => {
     card.addEventListener('click', () => {
-      window.location.href = 'details.html';
+      const tracking = card.dataset.tracking;
+      window.location.href = `details.html?tracking=${tracking}`;
     });
   });
 

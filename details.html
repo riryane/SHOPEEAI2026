@@ -62,10 +62,10 @@
             <i data-lucide="user" class="contact-icon" style="width: 20px; height: 20px;"></i>
             <div>
               <div class="contact-name-row">
-                <span class="customer-name" style="font-size: 15px;">Juan Dela Cruz</span>
-                <span class="payment-tag cod">COD</span>
+                <span class="customer-name" id="customerNameText" style="font-size: 15px;">Juan Dela Cruz</span>
+                <span class="payment-tag cod" id="paymentTagEl">COD</span>
               </div>
-              <div class="contact-phone">+63 912 345 6789</div>
+              <div class="contact-phone" id="customerPhoneText">+63 912 345 6789</div>
             </div>
           </div>
 
@@ -73,7 +73,7 @@
             <button class="action-circle-btn call" aria-label="Call Customer">
               <i data-lucide="phone" style="width: 16px; height: 16px;"></i>
             </button>
-            <button class="action-circle-btn chat" aria-label="Message Customer">
+            <button class="action-circle-btn chat" id="smsBtn" aria-label="Message Customer">
               <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
             </button>
           </div>
@@ -85,8 +85,8 @@
             <i data-lucide="map-pin" class="address-pin-icon" style="width: 18px; height: 18px;"></i>
             <div>
               <div class="address-title">Delivery Address</div>
-              <div class="address-full-text">Blk 4 Lot 12, Brgy. San Isidro, Cainta, Rizal</div>
-              <div class="address-landmark">Near blue gate beside sari-sari store</div>
+              <div class="address-full-text" id="addressFullText">Blk 4 Lot 12, Brgy. San Isidro, Cainta, Rizal</div>
+              <div class="address-landmark" id="addressLandmarkText">Near blue gate beside sari-sari store</div>
             </div>
           </div>
           <a href="#" class="navigate-link">
@@ -98,51 +98,50 @@
         <div class="grid-meta-row">
           <div class="meta-item">
             <div class="meta-label">Parcel Type</div>
-            <div class="meta-val">Small Box</div>
+            <div class="meta-val" id="parcelTypeVal">Small Box</div>
           </div>
           <div class="meta-item">
             <div class="meta-label">COD Amount</div>
-            <div class="meta-val price">₱245.00</div>
+            <div class="meta-val price" id="codPriceVal">₱245.00</div>
           </div>
         </div>
 
         <!-- Delivery Notes -->
         <div class="notes-section">
           <div class="notes-title">Delivery Notes</div>
-          <div class="notes-content">Please call first before delivery.</div>
-          <a href="#" class="notes-more-link">View more</a>
+          <div class="notes-content" id="deliveryNotesText">Please call first before delivery.</div>
         </div>
 
-        <!-- High Risk Warning Card -->
-        <div class="risk-warning-card">
+        <!-- Dynamic Risk Warning Card -->
+        <div class="risk-warning-card" id="riskWarningCard">
           <div class="risk-card-header">
             <div class="risk-header-title">
               <i data-lucide="alert-triangle" style="width: 16px; height: 16px;"></i>
-              <span>High Risk Delivery</span>
+              <span id="riskCardHeaderTitle">High Risk Delivery</span>
             </div>
-            <span class="risk-badge">HIGH RISK</span>
+            <span class="risk-badge" id="riskBadgeEl">HIGH RISK</span>
           </div>
 
           <div class="risk-warning-pill">
             <i data-lucide="alert-circle" style="width: 13px; height: 13px;"></i>
-            <span>Missing unit number</span>
+            <span id="riskWarningPillText">Missing unit number</span>
           </div>
 
-          <div class="risk-tags-row">
+          <div class="risk-tags-row" id="riskTagsContainer">
             <span class="risk-tag-dark">Hub Risk</span>
             <span class="risk-tag-dark">GPS Mismatch</span>
             <span class="risk-tag-dark">No Landmark</span>
           </div>
         </div>
 
-        <!-- Timing Suggestion Card -->
-        <div class="timing-card">
+        <!-- Dynamic Timing Suggestion Card -->
+        <div class="timing-card" id="timingCard">
           <div class="timing-header">
             <div class="timing-title">📈 TIMING SUGGESTION</div>
-            <span style="font-size: 11px; color: #888; font-weight: 600;">Woodlands Hub</span>
+            <span style="font-size: 11px; color: #888; font-weight: 600;" id="timingHubText">Woodlands Hub</span>
           </div>
-          <div class="timing-slot">11am – 1pm</div>
-          <div class="timing-sub">Highest success rate · 94%</div>
+          <div class="timing-slot" id="timingSlotText">11am – 1pm</div>
+          <div class="timing-sub" id="timingSubText">Highest success rate · 94%</div>
         </div>
 
       </div>
@@ -150,7 +149,7 @@
 
     <!-- Bottom Fixed Action Bar -->
     <div class="fixed-bottom-bar">
-      <a href="status.html" class="primary-action-btn">
+      <a href="status.html" class="primary-action-btn" id="chooseStatusBtn">
         <i data-lucide="flag" style="width: 18px; height: 18px;"></i>
         <span>Choose Status</span>
       </a>
@@ -164,12 +163,6 @@
   </div>
 
   <script>lucide.createIcons();</script>
-  <script>
-    document.getElementById('copyBtn').addEventListener('click', () => {
-      const text = document.getElementById('trackingNumText').textContent;
-      navigator.clipboard.writeText(text);
-      alert('Tracking number copied!');
-    });
-  </script>
+  <script src="assets/js/details.js"></script>
 </body>
 </html>
