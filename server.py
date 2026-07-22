@@ -3,7 +3,7 @@
 Shopee Express AI - Live Backend API Server (FastAPI + Uvicorn)
 ==============================================================================
 Automatically scores incoming parcel orders using trained Machine Learning (RandomForest),
-Personalized Customer Parcel History Analytics, and Mistral AI LLM (mistral-small-latest).
+Optimal Customer Parcel History Analytics (8-24 parcels/user), and Mistral AI LLM (mistral-small-latest).
 """
 
 from fastapi import FastAPI, HTTPException
@@ -11,12 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
 import requests
-import pandas as pd
-import numpy as np
 
 app = FastAPI(title="Shopee Express AI Risk Scoring API", version="1.0.0")
 
-# Enable CORS for frontend auto-fetch
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -29,68 +26,50 @@ MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY", "zSedUZF7w5nvkheTxoQWdOSaCzT
 MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
 MODEL_NAME = "mistral-small-latest"
 
-# 100% Realistic Customer Personal Parcel Histories
-CUSTOMER_HISTORIES = {
+OPTIMAL_CUSTOMER_HISTORIES = {
     "SPX1234567890": {
         "customer_id": "CUST_001",
         "name": "Juan Dela Cruz",
-        "total_past_parcels": 12,
-        "past_successful": 12,
+        "total_past_parcels": 15,
+        "past_successful": 15,
         "past_failed": 0,
         "personal_success_rate": 100.0,
         "personalized_time_window": "11:00 AM – 1:00 PM",
-        "ai_personalized_insight": "100% historical delivery success across 12 orders. Preferred recipient time window: 11:00 AM – 1:00 PM.",
-        "recent_history": [
-            {"date": "2026-03-05", "outcome": "delivered_on_time", "time": "11:30 AM", "payment": "COD"},
-            {"date": "2026-03-18", "outcome": "delivered_on_time", "time": "12:15 PM", "payment": "COD"},
-            {"date": "2026-03-29", "outcome": "delivered_on_time", "time": "11:45 AM", "payment": "COD"}
-        ]
+        "customer_tier": "Regular Shopper (15 Orders)",
+        "ai_personalized_insight": "100% historical delivery success across 15 past orders. Consistently receives COD packages during mid-day window (11:00 AM – 1:00 PM)."
     },
     "SPX0987654321": {
         "customer_id": "CUST_002",
         "name": "Maria Santos",
-        "total_past_parcels": 18,
-        "past_successful": 18,
+        "total_past_parcels": 24,
+        "past_successful": 24,
         "past_failed": 0,
         "personal_success_rate": 100.0,
         "personalized_time_window": "9:00 AM – 11:00 AM",
-        "ai_personalized_insight": "100% historical delivery success across 18 prepaid office orders during morning desk hours (9:00 AM – 11:00 AM).",
-        "recent_history": [
-            {"date": "2026-03-02", "outcome": "delivered_on_time", "time": "09:30 AM", "payment": "PREPAID"},
-            {"date": "2026-03-14", "outcome": "delivered_on_time", "time": "10:15 AM", "payment": "PREPAID"},
-            {"date": "2026-03-25", "outcome": "delivered_on_time", "time": "09:45 AM", "payment": "PREPAID"}
-        ]
+        "customer_tier": "Power Shopper (24 Orders)",
+        "ai_personalized_insight": "100% historical delivery success across 24 prepaid office orders during morning desk hours (9:00 AM – 11:00 AM)."
     },
     "SPX5556677788": {
         "customer_id": "CUST_003",
         "name": "Alex Reyes",
-        "total_past_parcels": 8,
-        "past_successful": 3,
-        "past_failed": 5,
-        "personal_success_rate": 37.5,
+        "total_past_parcels": 10,
+        "past_successful": 4,
+        "past_failed": 6,
+        "personal_success_rate": 40.0,
         "personalized_time_window": "3:00 PM – 5:00 PM",
-        "ai_personalized_insight": "PERSONALIZED AI PATTERN: Fails morning COD attempts (unreachable at work 9am-1pm). All 3 successful past deliveries occurred AFTER 3:00 PM when home. AI recommends afternoon dispatch (3:00 PM – 5:00 PM).",
-        "recent_history": [
-            {"date": "2026-03-10", "outcome": "failed (customer not available)", "time": "09:45 AM", "payment": "COD"},
-            {"date": "2026-03-19", "outcome": "failed (customer not available)", "time": "11:15 AM", "payment": "COD"},
-            {"date": "2026-03-27", "outcome": "delivered_on_time", "time": "03:30 PM", "payment": "COD"},
-            {"date": "2026-04-01", "outcome": "delivered_on_time", "time": "04:15 PM", "payment": "COD"}
-        ]
+        "customer_tier": "Working Professional (10 Orders)",
+        "ai_personalized_insight": "PERSONALIZED AI PATTERN: Fails morning COD attempts (6 past failures 9am-1pm while at office). All 4 successful deliveries occurred AFTER 3:00 PM when home. AI recommends afternoon dispatch (3:00 PM – 5:00 PM)."
     },
     "SPX1122334455": {
         "customer_id": "CUST_004",
         "name": "Mark Bautista",
-        "total_past_parcels": 6,
+        "total_past_parcels": 8,
         "past_successful": 2,
-        "past_failed": 4,
-        "personal_success_rate": 33.3,
-        "personalized_time_window": "10:00 AM – 12:00 PM (After Address Verification)",
-        "ai_personalized_insight": "PERSONALIZED AI PATTERN: 4 past address routing failures due to missing unit number on East Rd. Once unit number is verified via SMS, optimal delivery window is 10:00 AM – 12:00 PM.",
-        "recent_history": [
-            {"date": "2026-03-08", "outcome": "failed (bad address / missing unit)", "time": "10:00 AM", "payment": "PREPAID"},
-            {"date": "2026-03-21", "outcome": "failed (routing delay)", "time": "02:00 PM", "payment": "PREPAID"},
-            {"date": "2026-03-30", "outcome": "delivered_on_time", "time": "10:45 AM", "payment": "PREPAID"}
-        ]
+        "past_failed": 6,
+        "personal_success_rate": 25.0,
+        "personalized_time_window": "10:00 AM – 12:00 PM (Post-Verification)",
+        "customer_tier": "Frequent Shopper (8 Orders)",
+        "ai_personalized_insight": "PERSONALIZED AI PATTERN: 6 past address routing failures due to missing unit number on East Rd. Once unit number is verified via SMS, optimal delivery window is 10:00 AM – 12:00 PM."
     }
 }
 
@@ -164,7 +143,7 @@ def health_check():
         "service": "Shopee Express AI Backend Server",
         "ml_engine": "RandomForest (84.62% Accuracy)",
         "llm_engine": MODEL_NAME,
-        "customer_history_analytics": "Active (Personalized Delivery Windows)"
+        "history_sample_distribution": "8 to 24 parcels per user (Optimal)"
     }
 
 @app.get("/api/v1/parcels")
@@ -177,14 +156,14 @@ def get_parcel_details(tracking_no: str):
         raise HTTPException(status_code=404, detail="Parcel tracking number not found")
     
     item = PARCEL_DATABASE[tracking_no]
-    customer_hist = CUSTOMER_HISTORIES.get(tracking_no, CUSTOMER_HISTORIES["SPX1234567890"])
+    customer_hist = OPTIMAL_CUSTOMER_HISTORIES.get(tracking_no, OPTIMAL_CUSTOMER_HISTORIES["SPX1234567890"])
     
-    # Automatically call Mistral AI for personalized LLM pre-verification
     prompt = f"""
     Analyze customer delivery history for Shopee Express:
     - Customer Name: {item['customer_name']}
     - Address: {item['address']}
     - Payment: {item['payment_method']}
+    - Customer Tier: {customer_hist['customer_tier']}
     - Total Past Parcels: {customer_hist['total_past_parcels']}
     - Personal Success Rate: {customer_hist['personal_success_rate']}%
     - Past Failures: {customer_hist['past_failed']} orders
