@@ -1,18 +1,19 @@
 """
 ==============================================================================
-Shopee Express AI - Mistral AI LLM Integration
+Shopee Express AI - Mistral AI LLM Live API Integration Engine
 ==============================================================================
+Model: mistral-small-latest
 Handles Unstructured Address Parsing, Automated Pre-Verification SMS Generation,
-and Rider Failure Cause Analysis using Mistral AI models (e.g. mistral-small / mistral-medium).
+and Optimal Delivery Time Window Recommendations.
 """
 
 import os
 import json
 import requests
 
-# Set your Mistral API Key (e.g. os.environ.get("MISTRAL_API_KEY"))
-MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY", "YOUR_MISTRAL_API_KEY")
+MISTRAL_API_KEY = "zSedUZF7w5nvkheTxoQWdOSaCzTYcGhT"
 MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
+MODEL_NAME = "mistral-small-latest"  # Ultra-fast, highly accurate JSON model
 
 def parse_address_and_generate_sms(parcel_id, customer_name, address, payment_method, ml_success_score, failure_risk_reason):
     """
@@ -29,20 +30,11 @@ def parse_address_and_generate_sms(parcel_id, customer_name, address, payment_me
     - ML Delivery Success Score: {ml_success_score:.1f}%
     - ML Risk Reason: {failure_risk_reason}
     
-    Perform two tasks and respond in valid JSON format only:
+    Perform three tasks and respond in valid JSON format only with keys "address_issue", "sms_prompt", and "recommended_time_slot":
     1. "address_issue": Briefly identify why this address or delivery is risky (e.g., missing unit number, COD unavailability risk, route delay).
-    2. "sms_prompt": Draft a polite, professional, short SMS message (in friendly English or Taglish) asking the customer to confirm their availability or provide landmark details.
+    2. "sms_prompt": Draft a polite, professional, short SMS message (in friendly Taglish/English) asking the customer to confirm availability or provide landmark details.
     3. "recommended_time_slot": Suggest an optimal 2-hour delivery window (e.g., "11:00 AM - 1:00 PM").
     """
-
-    # Fallback response for offline / hackathon local testing
-    if MISTRAL_API_KEY == "YOUR_MISTRAL_API_KEY":
-        return {
-            "address_issue": f"Address flagged for {failure_risk_reason}. Low ML success probability ({ml_success_score:.1f}%).",
-            "sms_prompt": f"Hi {customer_name}! Shopee Xpress rider Juan will deliver package {parcel_id} today. Please reply to confirm if you are available to receive your order.",
-            "recommended_time_slot": "11:00 AM - 1:00 PM",
-            "source": "Mock Mistral AI Engine (Add MISTRAL_API_KEY to activate live API)"
-        }
 
     headers = {
         "Authorization": f"Bearer {MISTRAL_API_KEY}",
@@ -50,7 +42,7 @@ def parse_address_and_generate_sms(parcel_id, customer_name, address, payment_me
     }
 
     payload = {
-        "model": "mistral-small-latest",
+        "model": MODEL_NAME,
         "messages": [{"role": "user", "content": prompt}],
         "response_format": {"type": "json_object"},
         "temperature": 0.3
@@ -61,16 +53,24 @@ def parse_address_and_generate_sms(parcel_id, customer_name, address, payment_me
         if response.status_code == 200:
             result = response.json()
             content = result["choices"][0]["message"]["content"]
-            return json.loads(content)
+            parsed_json = json.loads(content)
+            parsed_json["model_used"] = MODEL_NAME
+            parsed_json["status"] = "LIVE_MISTRAL_RESPONSE"
+            return parsed_json
         else:
             print(f"Mistral API Error: {response.status_code} - {response.text}")
-            return None
+            return {
+                "address_issue": f"Address flagged for {failure_risk_reason}. Low ML score ({ml_success_score:.1f}%).",
+                "sms_prompt": f"Hi {customer_name}! Shopee Xpress rider Juan will deliver package {parcel_id} today. Please reply to confirm if you are available to receive your order.",
+                "recommended_time_slot": "11:00 AM - 1:00 PM",
+                "status": "FALLBACK"
+            }
     except Exception as e:
-        print(f"Mistral Request Error: {e}")
+        print(f"Mistral Request Exception: {e}")
         return None
 
 if __name__ == "__main__":
-    print("Testing Mistral AI Integration on High Risk Demo Parcels:")
+    print(f"Executing LIVE Mistral AI API ({MODEL_NAME}) for 4 Demo Parcels:")
     print("=" * 70)
     
     # Test Parcel 3 (Alex Reyes - P0000012)
