@@ -1,6 +1,8 @@
-// Shopee Xpress Rider App - Dynamic Parcel Details Logic
+// Shopee Express Rider App - Dynamic & Automated Live AI Details Logic
 
-const PARCEL_DATA = {
+const API_BASE_URL = "http://localhost:8000";
+
+const LOCAL_FALLBACK_DATA = {
   "SPX1234567890": {
     parcelId: "P0000001",
     trackingNo: "SPX1234567890",
@@ -21,7 +23,7 @@ const PARCEL_DATA = {
     timingSlot: "11:00 AM – 1:00 PM",
     timingHub: "Cainta North Hub (HUB_A_NORTH)",
     timingSub: "Highest success probability · 71%",
-    smsPrompt: "Hi Juan! Shopee Xpress rider Juan will deliver package SPX1234567890 today. Please reply to confirm availability."
+    smsPrompt: "Hi Juan! Shopee Xpress rider Juan will deliver package SPX1234567890 today."
   },
   "SPX0987654321": {
     parcelId: "P0000003",
@@ -43,7 +45,7 @@ const PARCEL_DATA = {
     timingSlot: "9:00 AM – 11:00 AM",
     timingHub: "Cainta North Hub (HUB_A_NORTH)",
     timingSub: "Highest success probability · 93%",
-    smsPrompt: "Hi Maria! Shopee Xpress rider Juan will deliver package SPX0987654321 today. Please reply to confirm availability."
+    smsPrompt: "Hi Maria! Shopee Xpress rider Juan will deliver package SPX0987654321 today."
   },
   "SPX5556677788": {
     parcelId: "P0000012",
@@ -91,12 +93,36 @@ const PARCEL_DATA = {
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Read tracking number from URL query string
+document.addEventListener('DOMContentLoaded', async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const trackingParam = urlParams.get('tracking') || "SPX1234567890";
-  
-  const data = PARCEL_DATA[trackingParam] || PARCEL_DATA["SPX1234567890"];
+
+  let data = LOCAL_FALLBACK_DATA[trackingParam] || LOCAL_FALLBACK_DATA["SPX1234567890"];
+
+  // AUTOMATIC LIVE BACKEND FETCH
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/parcels/${trackingParam}`);
+    if (response.ok) {
+      const resJson = await response.json();
+      const info = resJson.parcel_info;
+      const ai = resJson.ai_analysis;
+
+      data.name = info.customer_name;
+      data.address = info.address;
+      data.payment = info.payment_method;
+      data.price = info.price;
+      data.aiScore = `${info.ml_success_score}%`;
+      
+      if (ai) {
+        if (ai.sms_prompt) data.smsPrompt = ai.sms_prompt;
+        if (ai.address_issue) data.warningPill = ai.address_issue;
+        if (ai.recommended_time_slot) data.timingSlot = ai.recommended_time_slot;
+      }
+      console.log("⚡ Successfully fetched live backend AI predictions from FastAPI!");
+    }
+  } catch (err) {
+    console.warn("Backend API offline or unreachable, using local predictions fallback:", err);
+  }
 
   // Populate HTML elements dynamically
   document.getElementById('trackingNumText').textContent = `${data.trackingNo} (${data.parcelId})`;
@@ -141,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const smsBtn = document.getElementById('smsBtn');
   if (smsBtn) {
     smsBtn.addEventListener('click', () => {
-      alert(`[AI Pre-Verification Prompt Sent via Mistral AI]\n\nTo: ${data.name} (${data.phone})\n\n"${data.smsPrompt}"`);
+      alert(`[Automated Mistral AI Pre-Verification SMS]\n\nTo: ${data.name} (${data.phone})\n\n"${data.smsPrompt}"`);
     });
   }
 
