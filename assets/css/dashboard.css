@@ -1,0 +1,1065 @@
+/* ==========================================================================
+   Shopee Xpress Rider Dashboard - Unified iPhone Layout Stylesheet
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --shopee-orange: #EE4D2D;
+  --shopee-orange-hover: #D73C1E;
+  --shopee-orange-light: #FFF2EF;
+  --shopee-border-orange: #FF5722;
+  --cod-green: #388E3C;
+  --prepaid-blue: #5C9CE6;
+  --text-dark: #222222;
+  --text-medium: #555555;
+  --text-muted: #757575;
+  --bg-app: #F5F5F7;
+  --bg-card: #FFFFFF;
+  --border-light: #E5E5E8;
+  --border-card: #E8E8EC;
+  --radius-card: 16px;
+  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  background: #0B0B0E;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Standardized iPhone Container Frame for ALL pages */
+.iphone-frame {
+  width: 390px;
+  height: 844px;
+  max-height: 96vh;
+  aspect-ratio: 390 / 844;
+  background-color: #FFFFFF;
+  border-radius: 48px;
+  box-shadow: 
+    0 0 0 11px #222226,
+    0 0 0 13px #141417,
+    0 25px 60px rgba(0, 0, 0, 0.85);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* Dynamic Island / iPhone Top Notch */
+.dynamic-island {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 26px;
+  background-color: #000000;
+  border-radius: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+
+.camera-lens {
+  width: 10px;
+  height: 10px;
+  background: #111827;
+  border-radius: 50%;
+  border: 1px solid #1F2937;
+}
+
+/* Status Bar - Perfectly Aligned Around Notch */
+.status-bar {
+  height: 48px;
+  background-color: var(--shopee-orange);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 24px 8px 24px;
+  color: #FFFFFF;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  user-select: none;
+  z-index: 900;
+}
+
+.status-bar.white-bg {
+  background-color: #FFFFFF;
+  color: #111111;
+}
+
+.status-bar .right-icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-bar svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* Header Navbar */
+.app-header {
+  background-color: var(--shopee-orange);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 8px 16px;
+  color: #FFFFFF;
+}
+
+.app-header.white-header {
+  background-color: #FFFFFF;
+  color: #111111;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.header-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  text-decoration: none;
+}
+
+.header-btn:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.header-title-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+
+.header-logo-img {
+  height: 24px;
+  max-width: 170px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.header-title span.shopee {
+  font-weight: 700;
+  font-style: italic;
+  margin-right: 1px;
+}
+
+.header-title span.xpress {
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.8px;
+}
+
+/* Scrollable Body Content */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: var(--bg-card);
+  padding-bottom: 16px;
+  scroll-behavior: smooth;
+}
+
+/* Hide Scrollbar for clean app feel */
+.main-content::-webkit-scrollbar {
+  display: none;
+}
+.main-content {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Summary Greeting Banner */
+.greeting-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px 10px 20px;
+  background: #FFFFFF;
+}
+
+.greeting-text .subtext {
+  font-size: 14px;
+  color: var(--text-medium);
+  font-weight: 500;
+}
+
+.greeting-text .count-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #111111;
+  margin: 4px 0 2px 0;
+  letter-spacing: -0.5px;
+}
+
+.greeting-text .date-text {
+  font-size: 14px;
+  color: var(--text-medium);
+  font-weight: 500;
+}
+
+.greeting-illustration {
+  width: 95px;
+  height: 82px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+/* Navigation Tabs */
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  background: #FFFFFF;
+  margin-top: 2px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px 0 10px 0;
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  transition: color 0.2s;
+}
+
+.tab-btn.active {
+  color: var(--shopee-orange);
+  font-weight: 700;
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 3px;
+  background-color: var(--shopee-orange);
+  border-radius: 3px 3px 0 0;
+}
+
+/* Search and Filter Bar */
+.search-filter-container {
+  padding: 14px 16px 12px 16px;
+  display: flex;
+  gap: 10px;
+  background: #FFFFFF;
+}
+
+.search-box {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #999999;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px 0 38px;
+  border: 1px solid #E0E0E0;
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: var(--text-dark);
+  background-color: #FFFFFF;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input::placeholder {
+  color: #A0A0A0;
+  font-weight: 400;
+}
+
+.search-input:focus {
+  border-color: var(--shopee-orange);
+  box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.1);
+}
+
+.filter-btn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #E0E0E0;
+  border-radius: 10px;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover, .filter-btn:active {
+  background-color: var(--shopee-orange-light);
+  border-color: var(--shopee-orange);
+  color: var(--shopee-orange);
+}
+
+/* Delivery Cards List */
+.parcel-list {
+  padding: 4px 16px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.parcel-card {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-card);
+  border-radius: 16px;
+  padding: 16px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.parcel-card.highlighted {
+  border-color: var(--shopee-border-orange);
+  box-shadow: 0 4px 12px rgba(238, 77, 45, 0.12);
+}
+
+.parcel-card:hover {
+  transform: translateY(-1px);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.number-badge {
+  width: 28px;
+  height: 28px;
+  background-color: var(--shopee-orange);
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.customer-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111111;
+  letter-spacing: -0.2px;
+}
+
+.payment-tag {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.payment-tag.cod {
+  background-color: #388E3C;
+  color: #FFFFFF;
+}
+
+.payment-tag.prepaid {
+  background-color: #5C9CE6;
+  color: #FFFFFF;
+}
+
+.tracking-no {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-left: 38px;
+  margin-bottom: 6px;
+}
+
+.address-text {
+  font-size: 13.5px;
+  color: #333333;
+  line-height: 1.4;
+  margin-left: 38px;
+  margin-bottom: 12px;
+  font-weight: 500;
+  padding-right: 18px;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 38px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2E7D32;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #2E7D32;
+  border-radius: 50%;
+}
+
+.price-text {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--shopee-orange);
+}
+
+.chevron-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9E9E9E;
+}
+
+/* Modal Popup - Strictly Hidden by Default */
+.modal-overlay {
+  display: none !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: 2000;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.active {
+  display: flex !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   Details.html Custom Styles
+   ========================================================================== */
+.details-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tracking-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tracking-label {
+  font-size: 12px;
+  color: #888888;
+  font-weight: 600;
+}
+
+.tracking-val {
+  font-size: 17px;
+  font-weight: 800;
+  color: #111111;
+  margin-top: 2px;
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1px solid #D0D0D5;
+  border-radius: 8px;
+  background: #FFFFFF;
+  font-size: 12px;
+  font-weight: 600;
+  color: #444444;
+  cursor: pointer;
+}
+
+.customer-contact-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contact-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-icon {
+  color: #888888;
+}
+
+.contact-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.contact-phone {
+  font-size: 13px;
+  color: #555555;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-circle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+}
+
+.action-circle-btn.call {
+  background-color: #2E7D32;
+}
+
+.action-circle-btn.chat {
+  background-color: #2196F3;
+}
+
+.address-box-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.address-left-col {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+}
+
+.address-pin-icon {
+  color: var(--shopee-orange);
+  margin-top: 2px;
+}
+
+.address-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 3px;
+}
+
+.address-full-text {
+  font-size: 13px;
+  color: #333333;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.address-landmark {
+  font-size: 12px;
+  color: #777777;
+  margin-top: 3px;
+}
+
+.navigate-link {
+  color: var(--shopee-orange);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.grid-meta-row {
+  display: flex;
+  gap: 20px;
+  border-top: 1px solid #F0F0F2;
+  border-bottom: 1px solid #F0F0F2;
+  padding: 12px 0;
+}
+
+.meta-item {
+  flex: 1;
+}
+
+.meta-label {
+  font-size: 11px;
+  color: #888888;
+  font-weight: 600;
+}
+
+.meta-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  margin-top: 3px;
+}
+
+.meta-val.price {
+  color: var(--shopee-orange);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.notes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notes-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.notes-content {
+  font-size: 13px;
+  color: #444444;
+  font-weight: 500;
+}
+
+.notes-more-link {
+  font-size: 12px;
+  color: var(--shopee-orange);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* High Risk Warning Card */
+.risk-warning-card {
+  background: #FFF5F5;
+  border: 1px solid #FFCDD2;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.risk-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.risk-header-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #D32F2F;
+}
+
+.risk-badge {
+  padding: 2px 8px;
+  background: #FFCDD2;
+  color: #C62828;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.risk-warning-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #FFF8E1;
+  border: 1px solid #FFE082;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #F57F17;
+  align-self: flex-start;
+}
+
+.risk-tags-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.risk-tag-dark {
+  padding: 4px 10px;
+  background: #1C1C1E;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 20px;
+}
+
+/* Timing Suggestion Card */
+.timing-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E8EC;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.timing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timing-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #777777;
+  letter-spacing: 0.4px;
+}
+
+.timing-slot {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111111;
+}
+
+.timing-sub {
+  font-size: 12px;
+  color: #777777;
+  font-weight: 500;
+}
+
+/* Fixed Bottom Action Container */
+.fixed-bottom-bar {
+  padding: 12px 16px;
+  background: #FFFFFF;
+  border-top: 1px solid var(--border-light);
+}
+
+.primary-action-btn {
+  width: 100%;
+  height: 48px;
+  background-color: var(--shopee-orange);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.primary-action-btn:active {
+  background-color: var(--shopee-orange-hover);
+}
+
+.secondary-outline-btn {
+  width: 100%;
+  height: 48px;
+  background-color: #FFFFFF;
+  color: #555555;
+  border: 1px solid #D0D0D5;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   Status.html Custom Styles
+   ========================================================================== */
+.status-options-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-section-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 4px;
+}
+
+.status-option-card {
+  border: 1.5px solid #E8E8EC;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-option-card.selected {
+  border-color: var(--shopee-orange);
+  background-color: #FFF9F8;
+  box-shadow: 0 2px 8px rgba(238, 77, 45, 0.08);
+}
+
+.status-left-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.status-icon-circle.success { background-color: #00C853; }
+.status-icon-circle.unsuccessful { background-color: #D32F2F; }
+.status-icon-circle.reschedule { background-color: #00BFA5; }
+.status-icon-circle.return { background-color: #7C4DFF; }
+.status-icon-circle.damaged { background-color: #C62828; }
+
+.status-title-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.status-sub-text {
+  font-size: 12px;
+  color: #777777;
+  margin-top: 2px;
+}
+
+.radio-circle {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #CCCCCC;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.status-option-card.selected .radio-circle {
+  border-color: var(--shopee-orange);
+}
+
+.status-option-card.selected .radio-circle::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: var(--shopee-orange);
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   Reason.html Custom Styles
+   ========================================================================== */
+.reasons-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reason-option-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.reason-text-group {
+  flex: 1;
+}
+
+.reason-main-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.reason-option-row.selected .reason-main-title {
+  color: var(--shopee-orange);
+  font-weight: 800;
+}
+
+.reason-sub-desc {
+  font-size: 12px;
+  color: #777777;
+  margin-top: 2px;
+}
+
+.reason-radio-dot {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #CCCCCC;
+  border-radius: 50%;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.reason-option-row.selected .reason-radio-dot {
+  border-color: var(--shopee-orange);
+}
+
+.reason-option-row.selected .reason-radio-dot::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: var(--shopee-orange);
+  border-radius: 50%;
+}
+
+/* Bottom Navigation Bar */
+.bottom-nav {
+  height: 60px;
+  background: #FFFFFF;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: #888888;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex: 1;
+  padding: 6px 0;
+  transition: color 0.15s;
+}
+
+.nav-item svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.8;
+}
+
+.nav-item.active {
+  color: var(--shopee-orange);
+  font-weight: 700;
+}
+
+/* Bottom iOS Home Indicator bar */
+.home-indicator-bar {
+  height: 18px;
+  background-color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 4px;
+}
+
+.home-indicator {
+  width: 134px;
+  height: 5px;
+  background-color: #111111;
+  border-radius: 3px;
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopee Xpress - Delivery Unsuccessful Reason</title>
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- iPhone Container Frame -->
+  <div class="iphone-frame">
+    
+    <!-- iPhone Top Dynamic Island Notch -->
+    <div class="dynamic-island">
+      <div class="camera-lens"></div>
+    </div>
+
+    <!-- Top Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="right-icons">
+        <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.3c-1.46-1.77-2.35-4.04-2.35-6.5 0-5.74 4.66-10.4 10.4-10.4s10.4 4.66 10.4 10.4c0 2.46-.89 4.73-2.35 6.5l-.62-.69C21.26 16.07 22 14.12 22 12c0-4.97-4.03-9-9-9z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/></svg>
+      </div>
+    </div>
+
+    <!-- App Header Navbar -->
+    <header class="app-header">
+      <a href="status.html" class="header-btn" aria-label="Go Back">
+        <i data-lucide="chevron-left" style="width: 26px; height: 26px;"></i>
+      </a>
+      
+      <div class="header-title-text">Delivery Unsuccessful</div>
+
+      <div style="width: 32px;"></div> <!-- Spacer -->
+    </header>
+
+    <!-- Scrollable Main Content -->
+    <main class="main-content">
+      <div class="reasons-container">
+        
+        <div class="status-section-title">Why wasn't the delivery successful?</div>
+
+        <!-- Reason 1: Selected in Screenshot -->
+        <div class="reason-option-row selected">
+          <div class="reason-radio-dot"></div>
+          <div class="reason-text-group">
+            <div class="reason-main-title">Customer not at home / unavailable</div>
+            <div class="reason-sub-desc">No one available to receive the parcel</div>
+          </div>
+        </div>
+
+        <!-- Reason 2 -->
+        <div class="reason-option-row">
+          <div class="reason-radio-dot"></div>
+          <div class="reason-text-group">
+            <div class="reason-main-title">Address not found</div>
+            <div class="reason-sub-desc">The address cannot be located</div>
+          </div>
+        </div>
+
+        <!-- Reason 3 -->
+        <div class="reason-option-row">
+          <div class="reason-radio-dot"></div>
+          <div class="reason-text-group">
+            <div class="reason-main-title">Customer unreachable</div>
+            <div class="reason-sub-desc">Unable to contact the customer</div>
+          </div>
+        </div>
+
+        <!-- Reason 4 -->
+        <div class="reason-option-row">
+          <div class="reason-radio-dot"></div>
+          <div class="reason-text-group">
+            <div class="reason-main-title">Refused to accept</div>
+            <div class="reason-sub-desc">Customer refused the parcel</div>
+          </div>
+        </div>
+
+        <!-- Reason 5 -->
+        <div class="reason-option-row">
+          <div class="reason-radio-dot"></div>
+          <div class="reason-text-group">
+            <div class="reason-main-title">Incomplete / Incorrect address</div>
+            <div class="reason-sub-desc">Insufficient or incorrect address details</div>
+          </div>
+        </div>
+
+        <!-- Reason 6 -->
+        <div class="reason-option-row">
+          <div class="reason-radio-dot"></div>
+          <div class="reason-text-group">
+            <div class="reason-main-title">Payment issue</div>
+            <div class="reason-sub-desc">Customer cannot pay COD amount</div>
+          </div>
+        </div>
+
+        <!-- Reason 7 -->
+        <div class="reason-option-row">
+          <div class="reason-radio-dot"></div>
+          <div class="reason-text-group">
+            <div class="reason-main-title">Others</div>
+            <div class="reason-sub-desc">Other reasons</div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Bottom Fixed Action Bar -->
+    <div class="fixed-bottom-bar">
+      <a href="dashboard.html" class="primary-action-btn" id="confirmReasonBtn">
+        <span>Confirm</span>
+      </a>
+    </div>
+
+    <!-- iOS Home Indicator -->
+    <div class="home-indicator-bar">
+      <div class="home-indicator"></div>
+    </div>
+
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script>
+    // Radio Selection Logic
+    const rows = document.querySelectorAll('.reason-option-row');
+    rows.forEach(row => {
+      row.addEventListener('click', () => {
+        rows.forEach(r => r.classList.remove('selected'));
+        row.classList.add('selected');
+      });
+    });
+
+    document.getElementById('confirmReasonBtn').addEventListener('click', (e) => {
+      alert('Delivery status updated to Unsuccessful!');
+    });
+  </script>
+</body>
+</html>

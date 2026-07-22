@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopee Xpress - Parcel Details</title>
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- iPhone Container Frame -->
+  <div class="iphone-frame">
+    
+    <!-- iPhone Top Dynamic Island Notch -->
+    <div class="dynamic-island">
+      <div class="camera-lens"></div>
+    </div>
+
+    <!-- Top Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="right-icons">
+        <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.3c-1.46-1.77-2.35-4.04-2.35-6.5 0-5.74 4.66-10.4 10.4-10.4s10.4 4.66 10.4 10.4c0 2.46-.89 4.73-2.35 6.5l-.62-.69C21.26 16.07 22 14.12 22 12c0-4.97-4.03-9-9-9z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/></svg>
+      </div>
+    </div>
+
+    <!-- App Header Navbar -->
+    <header class="app-header">
+      <a href="dashboard.html" class="header-btn" aria-label="Go Back">
+        <i data-lucide="chevron-left" style="width: 26px; height: 26px;"></i>
+      </a>
+      
+      <div class="header-title-text">Parcel Details</div>
+
+      <div style="width: 32px;"></div> <!-- Spacer -->
+    </header>
+
+    <!-- Scrollable Main Content -->
+    <main class="main-content">
+      <div class="details-container">
+        
+        <!-- Tracking Header Row -->
+        <div class="tracking-header-row">
+          <div>
+            <div class="tracking-label">Tracking Number</div>
+            <div class="tracking-val" id="trackingNumText">SPX1234567890</div>
+          </div>
+          <button class="copy-btn" id="copyBtn">
+            <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+            <span>Copy</span>
+          </button>
+        </div>
+
+        <!-- Customer Contact Row -->
+        <div class="customer-contact-card">
+          <div class="contact-left">
+            <i data-lucide="user" class="contact-icon" style="width: 20px; height: 20px;"></i>
+            <div>
+              <div class="contact-name-row">
+                <span class="customer-name" style="font-size: 15px;">Juan Dela Cruz</span>
+                <span class="payment-tag cod">COD</span>
+              </div>
+              <div class="contact-phone">+63 912 345 6789</div>
+            </div>
+          </div>
+
+          <div class="contact-actions">
+            <button class="action-circle-btn call" aria-label="Call Customer">
+              <i data-lucide="phone" style="width: 16px; height: 16px;"></i>
+            </button>
+            <button class="action-circle-btn chat" aria-label="Message Customer">
+              <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Delivery Address Section -->
+        <div class="address-box-section">
+          <div class="address-left-col">
+            <i data-lucide="map-pin" class="address-pin-icon" style="width: 18px; height: 18px;"></i>
+            <div>
+              <div class="address-title">Delivery Address</div>
+              <div class="address-full-text">Blk 4 Lot 12, Brgy. San Isidro, Cainta, Rizal</div>
+              <div class="address-landmark">Near blue gate beside sari-sari store</div>
+            </div>
+          </div>
+          <a href="#" class="navigate-link">
+            <span>Navigate</span>
+          </a>
+        </div>
+
+        <!-- Metadata Grid Row -->
+        <div class="grid-meta-row">
+          <div class="meta-item">
+            <div class="meta-label">Parcel Type</div>
+            <div class="meta-val">Small Box</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">COD Amount</div>
+            <div class="meta-val price">₱245.00</div>
+          </div>
+        </div>
+
+        <!-- Delivery Notes -->
+        <div class="notes-section">
+          <div class="notes-title">Delivery Notes</div>
+          <div class="notes-content">Please call first before delivery.</div>
+          <a href="#" class="notes-more-link">View more</a>
+        </div>
+
+        <!-- High Risk Warning Card -->
+        <div class="risk-warning-card">
+          <div class="risk-card-header">
+            <div class="risk-header-title">
+              <i data-lucide="alert-triangle" style="width: 16px; height: 16px;"></i>
+              <span>High Risk Delivery</span>
+            </div>
+            <span class="risk-badge">HIGH RISK</span>
+          </div>
+
+          <div class="risk-warning-pill">
+            <i data-lucide="alert-circle" style="width: 13px; height: 13px;"></i>
+            <span>Missing unit number</span>
+          </div>
+
+          <div class="risk-tags-row">
+            <span class="risk-tag-dark">Hub Risk</span>
+            <span class="risk-tag-dark">GPS Mismatch</span>
+            <span class="risk-tag-dark">No Landmark</span>
+          </div>
+        </div>
+
+        <!-- Timing Suggestion Card -->
+        <div class="timing-card">
+          <div class="timing-header">
+            <div class="timing-title">📈 TIMING SUGGESTION</div>
+            <span style="font-size: 11px; color: #888; font-weight: 600;">Woodlands Hub</span>
+          </div>
+          <div class="timing-slot">11am – 1pm</div>
+          <div class="timing-sub">Highest success rate · 94%</div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Bottom Fixed Action Bar -->
+    <div class="fixed-bottom-bar">
+      <a href="status.html" class="primary-action-btn">
+        <i data-lucide="flag" style="width: 18px; height: 18px;"></i>
+        <span>Choose Status</span>
+      </a>
+    </div>
+
+    <!-- iOS Home Indicator -->
+    <div class="home-indicator-bar">
+      <div class="home-indicator"></div>
+    </div>
+
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script>
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const text = document.getElementById('trackingNumText').textContent;
+      navigator.clipboard.writeText(text);
+      alert('Tracking number copied!');
+    });
+  </script>
+</body>
+</html>

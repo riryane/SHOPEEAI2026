@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopee Xpress - Choose Status</title>
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- iPhone Container Frame -->
+  <div class="iphone-frame">
+    
+    <!-- iPhone Top Dynamic Island Notch -->
+    <div class="dynamic-island">
+      <div class="camera-lens"></div>
+    </div>
+
+    <!-- Top Status Bar (White Background) -->
+    <div class="status-bar white-bg">
+      <span>9:41</span>
+      <div class="right-icons">
+        <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.3c-1.46-1.77-2.35-4.04-2.35-6.5 0-5.74 4.66-10.4 10.4-10.4s10.4 4.66 10.4 10.4c0 2.46-.89 4.73-2.35 6.5l-.62-.69C21.26 16.07 22 14.12 22 12c0-4.97-4.03-9-9-9z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/></svg>
+      </div>
+    </div>
+
+    <!-- App Header Navbar (White Header) -->
+    <header class="app-header white-header">
+      <a href="details.html" class="header-btn" aria-label="Go Back">
+        <i data-lucide="chevron-left" style="width: 26px; height: 26px;"></i>
+      </a>
+      
+      <div class="header-title-text" style="color: #111;">Choose Status</div>
+
+      <div style="width: 32px;"></div> <!-- Spacer -->
+    </header>
+
+    <!-- Scrollable Main Content -->
+    <main class="main-content">
+      <div class="status-options-container">
+        
+        <div class="status-section-title">What's the result of this delivery?</div>
+
+        <!-- Option 1: Delivery Successful -->
+        <div class="status-option-card" data-status="successful">
+          <div class="status-left-info">
+            <div class="status-icon-circle success">
+              <i data-lucide="check-circle-2" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="status-title-text">Delivery Successful</div>
+              <div class="status-sub-text">Parcel delivered to recipient</div>
+            </div>
+          </div>
+          <div class="radio-circle"></div>
+        </div>
+
+        <!-- Option 2: Delivery Unsuccessful (Highlighted Selected in Image) -->
+        <div class="status-option-card selected" data-status="unsuccessful">
+          <div class="status-left-info">
+            <div class="status-icon-circle unsuccessful">
+              <i data-lucide="alert-circle" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="status-title-text">Delivery Unsuccessful</div>
+              <div class="status-sub-text">Could not complete delivery</div>
+            </div>
+          </div>
+          <div class="radio-circle"></div>
+        </div>
+
+        <!-- Option 3: Customer Requested to Reschedule -->
+        <div class="status-option-card" data-status="reschedule">
+          <div class="status-left-info">
+            <div class="status-icon-circle reschedule">
+              <i data-lucide="calendar" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="status-title-text">Customer Requested to Reschedule</div>
+              <div class="status-sub-text">Customer requested new delivery time</div>
+            </div>
+          </div>
+          <div class="radio-circle"></div>
+        </div>
+
+        <!-- Option 4: Return to Hub -->
+        <div class="status-option-card" data-status="return">
+          <div class="status-left-info">
+            <div class="status-icon-circle return">
+              <i data-lucide="rotate-ccw" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="status-title-text">Return to Hub</div>
+              <div class="status-sub-text">Return parcel to hub/warehouse</div>
+            </div>
+          </div>
+          <div class="radio-circle"></div>
+        </div>
+
+        <!-- Option 5: Damaged Parcel -->
+        <div class="status-option-card" data-status="damaged">
+          <div class="status-left-info">
+            <div class="status-icon-circle damaged">
+              <i data-lucide="package-x" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div>
+              <div class="status-title-text">Damaged Parcel</div>
+              <div class="status-sub-text">Parcel is damaged</div>
+            </div>
+          </div>
+          <div class="radio-circle"></div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Bottom Fixed Action Bar -->
+    <div class="fixed-bottom-bar">
+      <a href="reason.html" id="continueBtn" class="primary-action-btn">
+        <span>Continue</span>
+      </a>
+    </div>
+
+    <!-- iOS Home Indicator -->
+    <div class="home-indicator-bar">
+      <div class="home-indicator"></div>
+    </div>
+
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script>
+    // Selection logic
+    const cards = document.querySelectorAll('.status-option-card');
+    const continueBtn = document.getElementById('continueBtn');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        cards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        
+        const status = card.dataset.status;
+        if (status === 'unsuccessful') {
+          continueBtn.href = 'reason.html';
+          continueBtn.innerHTML = '<span>Next (Select Reason)</span>';
+          continueBtn.className = 'primary-action-btn';
+        } else if (status === 'successful') {
+          continueBtn.href = 'dashboard.html';
+          continueBtn.innerHTML = '<span>Confirm Successful Delivery</span>';
+          continueBtn.className = 'primary-action-btn';
+        } else {
+          continueBtn.href = 'dashboard.html';
+          continueBtn.innerHTML = '<span>Submit Status</span>';
+          continueBtn.className = 'primary-action-btn';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
