@@ -45,18 +45,18 @@ The **AI Timing Suggestion Engine** combines historical probability math from `h
 
 ## 📦 Demo Case Study Architecture: Global AI Training + 1 Single Hub Pilot (`HUB_A_NORTH`)
 
-### 🛵 Assigned Front-End Rider:
+### Assigned Front-End Rider:
 - **Rider**: **Rider Juan** (Hardcoded 1 Rider view in `dashboard.html`)
 - **Single Hub Focus**: `HUB_A_NORTH` (Cainta, Rizal)
 
-### 📦 4 Real Parcels (Extracted Verbatim from `parcel_history.csv` in Supabase):
+### 4 Real Parcels (Extracted Verbatim from `parcel_history.csv` in Supabase):
 
 | Parcel ID | Recipient Name | Payment | Parcel Attributes | Historical Outcome | Failure Reason | AI Risk Level | AI Success Score | AI Optimal Timing Suggestion |
 |---|---|---|---|---|---|---|---|---|
-| `P0000001` | **Juan Dela Cruz** | COD (₱245.00) | Economy \| Small Box \| South -> Metro | `delivered_on_time` | Delivered (Attempt 1) | 🟢 **LOW RISK** | **70.6%** | **11:00 AM – 1:00 PM** |
-| `P0000003` | **Maria Santos** | PREPAID | Standard \| Enterprise \| East -> Metro | `delivered_on_time` | Delivered (Attempt 1) | 🟢 **LOW RISK** | **92.9%** | **9:00 AM – 11:00 AM** |
-| `P0000012` | **Alex Reyes** | COD (₱560.00) | Standard \| Marketplace \| West -> Metro | `failed` | `hub backlog` | 🟡 **MEDIUM RISK** | **45.1%** | **2:00 PM – 4:00 PM** |
-| `P0000014` | **Mark Bautista** | PREPAID | Standard \| Direct Seller \| River -> Metro | `failed` | `routing delay` (3 attempts) | 🔴 **HIGH RISK** | **25.7%** | **9:00 AM – 11:00 AM** |
+| `P0000001` | **Juan Dela Cruz** | COD (₱245.00) | Economy \| Small Box \| South -> Metro | `delivered_on_time` | Delivered (Attempt 1) | **LOW RISK** | **70.6%** | **11:00 AM – 1:00 PM** |
+| `P0000003` | **Maria Santos** | PREPAID | Standard \| Enterprise \| East -> Metro | `delivered_on_time` | Delivered (Attempt 1) | **LOW RISK** | **92.9%** | **9:00 AM – 11:00 AM** |
+| `P0000012` | **Alex Reyes** | COD (₱560.00) | Standard \| Marketplace \| West -> Metro | `failed` | `hub backlog` | **MEDIUM RISK** | **45.1%** | **2:00 PM – 4:00 PM** |
+| `P0000014` | **Mark Bautista** | PREPAID | Standard \| Direct Seller \| River -> Metro | `failed` | `routing delay` (3 attempts) | **HIGH RISK** | **25.7%** | **9:00 AM – 11:00 AM** |
 
 ---
 

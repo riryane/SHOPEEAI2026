@@ -431,19 +431,21 @@ html, body {
   white-space: nowrap;
   letter-spacing: -0.2px;
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.ai-score-percent.low {
-  color: #2E7D32;
+.score-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
 }
 
-.ai-score-percent.medium {
-  color: #E65100;
-}
-
-.ai-score-percent.high {
-  color: #C62828;
-}
+.score-dot.low { background-color: #2E7D32; }
+.score-dot.medium { background-color: #E65100; }
+.score-dot.high { background-color: #C62828; }
 
 .tracking-no {
   font-size: 13px;

@@ -112,50 +112,39 @@
           <div class="notes-content" id="deliveryNotesText">Please call first before delivery.</div>
         </div>
 
-        <!-- Dynamic Risk Warning Card -->
+        <!-- Dynamic Risk / Status Warning Card -->
         <div class="risk-warning-card" id="riskWarningCard">
           <div class="risk-card-header">
             <div class="risk-header-title">
-              <i data-lucide="alert-triangle" style="width: 16px; height: 16px;"></i>
-              <span id="riskCardHeaderTitle">High Risk Delivery</span>
+              <i data-lucide="alert-triangle" id="riskIconEl" style="width: 17px; height: 17px;"></i>
+              <span id="riskCardHeaderTitle">Routing & Address Verification Risk</span>
             </div>
             <span class="risk-badge" id="riskBadgeEl">HIGH RISK</span>
           </div>
 
           <div class="risk-warning-pill">
-            <i data-lucide="alert-circle" style="width: 13px; height: 13px;"></i>
-            <span id="riskWarningPillText">Missing unit number</span>
+            <i data-lucide="info" style="width: 14px; height: 14px;"></i>
+            <span id="riskWarningPillText">Missing unit number in address string</span>
           </div>
 
           <div class="risk-tags-row" id="riskTagsContainer">
-            <span class="risk-tag-dark">Hub Risk</span>
-            <span class="risk-tag-dark">GPS Mismatch</span>
-            <span class="risk-tag-dark">No Landmark</span>
+            <span class="risk-tag-dark">Routing Delay</span>
+            <span class="risk-tag-dark">Missing Unit Number</span>
+            <span class="risk-tag-dark">3 Past Retries</span>
           </div>
         </div>
 
         <!-- Dynamic Timing Suggestion Card -->
         <div class="timing-card" id="timingCard">
           <div class="timing-header">
-            <div class="timing-title">📈 PERSONALIZED TIMING SUGGESTION</div>
-            <span style="font-size: 11px; color: #888; font-weight: 600;" id="timingHubText">Woodlands Hub</span>
-          </div>
-          <div class="timing-slot" id="timingSlotText">11am – 1pm</div>
-          <div class="timing-sub" id="timingSubText">Highest success rate · 94%</div>
-        </div>
-
-        <!-- Customer Personal Delivery History Profile -->
-        <div class="customer-history-card" id="customerHistoryCard" style="background: #F8F9FA; border: 1.5px solid #E0E0E0; border-radius: 14px; padding: 14px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="font-size: 12.5px; font-weight: 800; color: #111; display: flex; align-items: center; gap: 6px;">
-              <i data-lucide="history" style="width: 16px; height: 16px; color: var(--shopee-orange);"></i>
-              <span>PERSONAL CUSTOMER HISTORY</span>
+            <div class="timing-title" style="display: flex; align-items: center; gap: 6px;">
+              <i data-lucide="clock" style="width: 15px; height: 15px; color: var(--shopee-orange);"></i>
+              <span>OPTIMAL TIMING SUGGESTION</span>
             </div>
-            <span style="font-size: 11px; font-weight: 700; color: #555;" id="historyStatPill">12 Orders · 100% Success</span>
+            <span style="font-size: 11px; color: #888; font-weight: 600;" id="timingHubText">Cainta North Hub</span>
           </div>
-          <div style="font-size: 12.5px; color: #444; line-height: 1.4; font-weight: 500;" id="historyInsightText">
-            100% historical delivery success across 12 orders. Preferred recipient time window: 11:00 AM – 1:00 PM.
-          </div>
+          <div class="timing-slot" id="timingSlotText">11:00 AM – 1:00 PM</div>
+          <div class="timing-sub" id="timingSubText">Highest success rate · 94%</div>
         </div>
 
       </div>
