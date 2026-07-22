@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPX Delivery Risk Monitor — Ops Dashboard</title>
+  <link rel="stylesheet" href="assets/css/ops-dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <!-- Error Banner -->
+  <div class="error-banner" id="errorBanner">
+    <div class="error-banner-content">
+      <i data-lucide="wifi-off" class="error-icon"></i>
+      <span class="error-text">Couldn't reach the database — showing stale data</span>
+      <button class="retry-btn" id="retryBtn">
+        <i data-lucide="refresh-cw" style="width:14px;height:14px"></i> Retry
+      </button>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <img src="assets/images/shopee_express_logo.png" alt="SPX" class="brand-img">
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-link active">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Overview</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i data-lucide="building-2"></i>
+          <span>Hubs</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i data-lucide="flag-triangle-right"></i>
+          <span>Flagged Parcels</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i data-lucide="settings"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sync-status" id="syncStatus">
+          <div class="sync-dot"></div>
+          <span class="sync-text">Syncing...</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-area">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="hub-filter">
+            <select id="hubFilter" class="hub-select">
+              <option value="ALL">All Hubs</option>
+              <option value="HUB_A_NORTH">HUB_A_NORTH</option>
+              <option value="HUB_B_CENTRAL">HUB_B_CENTRAL</option>
+              <option value="HUB_C_SOUTH">HUB_C_SOUTH</option>
+              <option value="HUB_D_EAST">HUB_D_EAST</option>
+              <option value="HUB_E_WEST">HUB_E_WEST</option>
+              <option value="HUB_F_RIVER">HUB_F_RIVER</option>
+            </select>
+          </div>
+          <div class="date-filter">
+            <button class="date-btn active" data-range="today">Latest Day</button>
+            <button class="date-btn" data-range="7d">7 Days</button>
+            <button class="date-btn" data-range="30d">30 Days</button>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <span class="last-synced" id="lastSynced">Last synced: —</span>
+          <button class="refresh-btn" id="refreshBtn" title="Refresh now">
+            <i data-lucide="refresh-cw"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Body -->
+      <div class="content-body">
+        <div class="content-main">
+          <!-- Stat Row -->
+          <section class="stat-row">
+            <div class="stat-card" id="statTotalParcels">
+              <div class="stat-label">TOTAL PARCELS</div>
+              <div class="stat-value skeleton-text">—</div>
+              <div class="stat-trend" id="trendTotalParcels"></div>
+            </div>
+            <div class="stat-card" id="statFailedRate">
+              <div class="stat-label">FAILED/DELAYED RATE</div>
+              <div class="stat-value skeleton-text">—</div>
+              <div class="stat-trend" id="trendFailedRate"></div>
+            </div>
+            <div class="stat-card" id="statFlagged">
+              <div class="stat-label">FLAGGED HIGH-RISK</div>
+              <div class="stat-value skeleton-text">—</div>
+              <div class="stat-trend" id="trendFlagged"></div>
+            </div>
+            <div class="stat-card" id="statResolution">
+              <div class="stat-label">AVG RESOLUTION TIME</div>
+              <div class="stat-value skeleton-text">—</div>
+              <div class="stat-trend" id="trendResolution"></div>
+            </div>
+          </section>
+
+          <!-- Hub Performance Table -->
+          <section class="section-block">
+            <div class="section-header">
+              <h2 class="section-title">Hub Performance</h2>
+              <button class="filter-table-btn" id="sortToggle">
+                <i data-lucide="arrow-up-down" style="width:14px;height:14px"></i> Sort
+              </button>
+            </div>
+            <div class="table-wrapper">
+              <table class="hub-table" id="hubTable">
+                <thead>
+                  <tr>
+                    <th data-sort="hub">HUB</th>
+                    <th data-sort="volume">VOLUME</th>
+                    <th data-sort="staffing">STAFFING</th>
+                    <th data-sort="failedRate">FAILED RATE</th>
+                    <th data-sort="flagged">FLAGGED %</th>
+                    <th data-sort="trend">TREND</th>
+                  </tr>
+                </thead>
+                <tbody id="hubTableBody">
+                  <!-- Loading skeletons -->
+                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="6"><div class="skeleton-bar"></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Failure Reason Breakdown -->
+          <section class="section-block">
+            <div class="section-header">
+              <h2 class="section-title">Failure Reason Breakdown</h2>
+              <span class="section-subtitle" id="chartHubLabel">All Hubs</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="failureChart" height="220"></canvas>
+              <div class="chart-skeleton" id="chartSkeleton">
+                <div class="skeleton-bar" style="width:80%;height:24px"></div>
+                <div class="skeleton-bar" style="width:60%;height:24px"></div>
+                <div class="skeleton-bar" style="width:45%;height:24px"></div>
+                <div class="skeleton-bar" style="width:30%;height:24px"></div>
+                <div class="skeleton-bar" style="width:20%;height:24px"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right Sidebar: Flagged Queue -->
+        <aside class="flagged-sidebar">
+          <div class="flagged-header">
+            <h3>Flagged Queue <span class="flagged-count" id="flaggedCount">(0)</span></h3>
+            <a href="#" class="view-all-link">View all</a>
+          </div>
+          <div class="flagged-list" id="flaggedList">
+            <!-- Loading skeletons -->
+            <div class="flagged-skeleton">
+              <div class="skeleton-bar" style="width:70%"></div>
+              <div class="skeleton-bar" style="width:50%"></div>
+            </div>
+            <div class="flagged-skeleton">
+              <div class="skeleton-bar" style="width:70%"></div>
+              <div class="skeleton-bar" style="width:50%"></div>
+            </div>
+            <div class="flagged-skeleton">
+              <div class="skeleton-bar" style="width:70%"></div>
+              <div class="skeleton-bar" style="width:50%"></div>
+            </div>
+            <div class="flagged-skeleton">
+              <div class="skeleton-bar" style="width:70%"></div>
+              <div class="skeleton-bar" style="width:50%"></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/ops-dashboard.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
