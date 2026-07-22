@@ -27,6 +27,8 @@ const PARCEL_DATA_MAP = {
     timingSlot: "11:00 AM – 1:00 PM",
     timingHub: "Cainta North Hub (HUB_A_NORTH)",
     timingSub: "Highest success probability · 70.6%",
+    historyStat: "12 Orders · 100% Success Rate",
+    historyInsight: "100% historical delivery success across 12 orders. Consistently receives COD packages during mid-day window (11:00 AM – 1:00 PM).",
     smsPrompt: "Hi Juan! Shopee Xpress rider Juan will deliver package SPX1234567890 today."
   },
   "SPX0987654321": {
@@ -53,6 +55,8 @@ const PARCEL_DATA_MAP = {
     timingSlot: "9:00 AM – 11:00 AM",
     timingHub: "Cainta North Hub (HUB_A_NORTH)",
     timingSub: "Highest success probability · 92.9%",
+    historyStat: "18 Orders · 100% Success Rate",
+    historyInsight: "100% historical delivery success across 18 prepaid office orders during morning desk hours (9:00 AM – 11:00 AM).",
     smsPrompt: "Hi Maria! Shopee Xpress rider Juan will deliver package SPX0987654321 today."
   },
   "SPX5556677788": {
@@ -76,9 +80,11 @@ const PARCEL_DATA_MAP = {
     headerColor: "#E65100",
     badgeBg: "#FFE082",
     badgeColor: "#E65100",
-    timingSlot: "2:00 PM – 4:00 PM",
+    timingSlot: "3:00 PM – 5:00 PM (Personalized)",
     timingHub: "Cainta North Hub (HUB_A_NORTH)",
-    timingSub: "Optimal time window for COD customer availability",
+    timingSub: "Personalized window: All 3 past successful deliveries occurred after 3:00 PM",
+    historyStat: "8 Orders · 37.5% Success Rate (5 COD Failures)",
+    historyInsight: "CUSTOMER PERSONAL PATTERN: Alex Reyes fails morning COD attempts (unreachable at work 9am-1pm). All 3 successful past deliveries occurred AFTER 3:00 PM when home. AI personalized recommendation: Dispatch between 3:00 PM – 5:00 PM.",
     smsPrompt: "Hi Alex! Your order SPX5556677788 is on the way. Pls confirm if you're available for COD delivery today. Reply with a landmark near 28 Sunrise St. Thanks!"
   },
   "SPX1122334455": {
@@ -102,9 +108,11 @@ const PARCEL_DATA_MAP = {
     headerColor: "#B71C1C",
     badgeBg: "#FFCDD2",
     badgeColor: "#B71C1C",
-    timingSlot: "9:00 AM – 11:00 AM",
+    timingSlot: "10:00 AM – 12:00 PM (Post-Verification)",
     timingHub: "Cainta North Hub (HUB_A_NORTH)",
-    timingSub: "Pre-verification required before dispatch",
+    timingSub: "Personalized window: Requires address unit verification first",
+    historyStat: "6 Orders · 33.3% Success Rate (4 Address Failures)",
+    historyInsight: "CUSTOMER PERSONAL PATTERN: Mark Bautista has 4 past address routing failures due to missing unit number on East Rd. Once unit number is verified via SMS, optimal delivery window is 10:00 AM – 12:00 PM.",
     smsPrompt: "Hi Mark! Your Shopee Express parcel is on the way. Pls confirm if you're available or provide a landmark near 91 East Rd., Brgy. Sta. Clara. Reply YES or call us."
   }
 };
@@ -160,6 +168,16 @@ function renderUI(data) {
   document.getElementById('timingSlotText').textContent = data.timingSlot;
   document.getElementById('timingSubText').textContent = data.timingSub;
 
+  // Customer Personal History Card Content
+  const historyStatPill = document.getElementById('historyStatPill');
+  if (historyStatPill) {
+    historyStatPill.textContent = data.historyStat;
+  }
+  const historyInsightText = document.getElementById('historyInsightText');
+  if (historyInsightText) {
+    historyInsightText.textContent = data.historyInsight;
+  }
+
   // Copy tracking button
   document.getElementById('copyBtn').onclick = () => {
     navigator.clipboard.writeText(data.trackingNo);
@@ -196,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(resJson => {
       if (resJson) {
         const info = resJson.parcel_info;
+        const custHist = resJson.customer_personal_history;
         const ai = resJson.ai_analysis;
 
         data.name = info.customer_name;
@@ -204,6 +223,12 @@ document.addEventListener('DOMContentLoaded', () => {
         data.price = info.price;
         data.aiScore = `${info.ml_success_score}%`;
         
+        if (custHist) {
+          data.historyStat = `${custHist.total_past_parcels} Orders · ${custHist.personal_success_rate}% Success`;
+          data.historyInsight = custHist.ai_personalized_insight;
+          if (custHist.personalized_time_window) data.timingSlot = custHist.personalized_time_window;
+        }
+
         if (ai) {
           if (ai.sms_prompt) data.smsPrompt = ai.sms_prompt;
           if (ai.address_issue) data.warningPill = ai.address_issue;
