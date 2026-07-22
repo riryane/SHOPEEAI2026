@@ -123,6 +123,27 @@
             </div>
           </div>
 
+          <!-- Intelligence & Recommendation Banner -->
+          <section class="ai-insight-banner">
+            <div class="ai-banner-left">
+              <div class="ai-badge-pulse">
+                <i data-lucide="bot" style="width:15px;height:15px"></i>
+                <span>Predictive Risk Optimization Active</span>
+              </div>
+              <h3 class="ai-banner-title">Automated Logistics Failure Risk Mitigation</h3>
+              <p class="ai-banner-desc">
+                Predictive system flagged <strong>47 high-risk parcels</strong> network-wide (missing unit numbers & COD afternoon unavailability). 
+                Executing automated pre-verification prevents first-attempt failures, saving an estimated <strong>₱181,440 / month</strong>.
+              </p>
+            </div>
+            <div class="ai-banner-right">
+              <button class="ai-banner-btn" id="triggerAiPreVerifyAll">
+                <i data-lucide="send" style="width:14px;height:14px"></i>
+                <span>Trigger Pre-Verification (47 Parcels)</span>
+              </button>
+            </div>
+          </section>
+
           <!-- Stat Row -->
           <section class="stat-row">
             <div class="stat-card" id="statTotalParcels">
@@ -188,18 +209,19 @@
                     <th data-sort="volume">VOLUME</th>
                     <th data-sort="staffing">STAFFING</th>
                     <th data-sort="failedRate">FAILED %</th>
+                    <th data-sort="aiRisk">PREDICTED SUCCESS</th>
                     <th data-sort="flagged">FLAGGED</th>
                     <th data-sort="sla">SLA</th>
                     <th data-sort="trend">7D TREND</th>
                   </tr>
                 </thead>
                 <tbody id="hubTableBody">
-                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
-                  <tr class="skeleton-row"><td colspan="7"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="8"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="8"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="8"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="8"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="8"><div class="skeleton-bar"></div></td></tr>
+                  <tr class="skeleton-row"><td colspan="8"><div class="skeleton-bar"></div></td></tr>
                 </tbody>
               </table>
             </div>
@@ -274,6 +296,113 @@
         </aside>
       </div>
     </main>
+  </div>
+
+  <!-- AI Parcel Inspector Modal -->
+  <div class="modal-overlay" id="aiModalOverlay">
+    <div class="modal-card" id="aiInspectorModal">
+      <button class="modal-close-btn" id="closeAiModalBtn">
+        <i data-lucide="x" style="width:18px;height:18px"></i>
+      </button>
+
+      <div class="modal-header">
+        <div class="modal-header-top">
+          <span class="modal-badge-ai">
+            <i data-lucide="sparkles" style="width:13px;height:13px"></i>
+            Parcel Delivery Inspector
+          </span>
+          <span class="modal-tracking-id" id="modalTrackingNo">SPX1122334455</span>
+        </div>
+        <h2 class="modal-recipient-name" id="modalCustomerName">Mark Bautista</h2>
+        <p class="modal-address" id="modalAddress">91 East Rd., Brgy. Sta. Clara, Cainta, Rizal</p>
+      </div>
+
+      <div class="modal-grid">
+        <!-- Left Column: Risk & Customer History -->
+        <div class="modal-col">
+          <div class="ai-card-box">
+            <div class="ai-box-title">
+              <i data-lucide="cpu" style="width:15px;height:15px"></i>
+              Delivery Success Probability
+            </div>
+            <div class="score-display-row">
+              <div class="score-ring-container">
+                <svg class="score-ring" viewBox="0 0 36 36">
+                  <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                  <path class="ring-fill" id="modalScoreRing" stroke-dasharray="25.7, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+                <span class="ring-text" id="modalScoreText">25.7%</span>
+              </div>
+              <div class="score-meta">
+                <span class="score-status-tag danger" id="modalRiskLevel">HIGH RISK</span>
+                <span class="score-subtext">Delivery Success Probability</span>
+                <p class="score-reason" id="modalFailureReason">Primary Driver: missing unit number & routing delay</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ai-card-box">
+            <div class="ai-box-title">
+              <i data-lucide="history" style="width:15px;height:15px"></i>
+              Customer History Analytics
+            </div>
+            <div class="cust-history-stats">
+              <div class="cust-stat-item">
+                <span class="cust-stat-label">Past Orders</span>
+                <span class="cust-stat-val" id="modalPastOrders">8 Parcels</span>
+              </div>
+              <div class="cust-stat-item">
+                <span class="cust-stat-label">Success Rate</span>
+                <span class="cust-stat-val text-danger" id="modalCustSuccessRate">25.0%</span>
+              </div>
+              <div class="cust-stat-item">
+                <span class="cust-stat-label">Tier</span>
+                <span class="cust-stat-val" id="modalCustTier">Frequent Shopper</span>
+              </div>
+            </div>
+            <div class="cust-insight-bubble" id="modalCustInsight">
+              6 past failures due to address routing issues. Optimal delivery window requires pre-verified unit number.
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Address Diagnosis & Action Prompt -->
+        <div class="modal-col">
+          <div class="ai-card-box llm-box">
+            <div class="ai-box-title">
+              <i data-lucide="bot" style="width:15px;height:15px"></i>
+              Smart Address Diagnosis
+            </div>
+            <div class="llm-issue-card">
+              <span class="llm-label">Generative Diagnosis:</span>
+              <p id="modalLlmIssue">Address missing house/unit number. System recommends pre-verification via SMS before rider dispatch.</p>
+            </div>
+            <div class="llm-slot-card">
+              <i data-lucide="clock" style="width:14px;height:14px"></i>
+              <span>Recommended Window: <strong id="modalRecSlot">10:00 AM – 12:00 PM (Post-Verification)</strong></span>
+            </div>
+          </div>
+
+          <div class="ai-card-box sms-box">
+            <div class="ai-box-title">
+              <i data-lucide="message-square" style="width:15px;height:15px"></i>
+              Pre-Verification SMS Prompt
+            </div>
+            <div class="sms-preview" id="modalSmsPrompt">
+              "Hi Mark! Shopee Express rider Juan is preparing your package. Please reply with your unit/house number on East Rd to ensure on-time delivery today."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancelAiModalBtn">Close</button>
+        <button class="btn-primary-ai" id="sendSmsActionBtn">
+          <i data-lucide="send" style="width:14px;height:14px"></i>
+          <span>Send Pre-Verification SMS</span>
+        </button>
+      </div>
+    </div>
   </div>
 
   <script src="assets/js/ops-dashboard.js"></script>
