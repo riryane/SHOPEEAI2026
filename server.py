@@ -180,6 +180,29 @@ def get_dataset_parcels():
 def get_dataset_hub_operations():
     return DATASET_HUB_OPERATIONS
 
+@app.get("/api/v1/dataset/cost_assumptions")
+def get_dataset_cost_assumptions():
+    excel_path = 'datasets/cost_assumptions.xlsx'
+    if not os.path.exists(excel_path):
+        raise HTTPException(status_code=404, detail="cost_assumptions.xlsx not found")
+    try:
+        import pandas as pd
+        xls = pd.ExcelFile(excel_path)
+        res = {}
+        for sheet in xls.sheet_names:
+            df = pd.read_excel(excel_path, sheet_name=sheet)
+            res[sheet] = df.fillna('').to_dict(orient='records')
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/v1/dataset/data_dictionary")
+def get_dataset_data_dictionary():
+    pdf_path = 'datasets/data_dictionary.pdf'
+    if not os.path.exists(pdf_path):
+        raise HTTPException(status_code=404, detail="data_dictionary.pdf not found")
+    return FileResponse(pdf_path, media_type="application/pdf", filename="data_dictionary.pdf")
+
 @app.get("/api/v1/parcels")
 def get_all_parcels():
     return list(PARCEL_DATABASE.values())
