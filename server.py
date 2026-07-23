@@ -159,10 +159,17 @@ def get_parcel_details(tracking_no: str):
     customer_hist = OPTIMAL_CUSTOMER_HISTORIES.get(tracking_no, OPTIMAL_CUSTOMER_HISTORIES["SPX1234567890"])
     
     prompt = f"""
-    Analyze customer delivery history for Shopee Express:
+    You are an expert Shopee Express Philippines (SPX PH) last-mile logistics AI engine.
+    Understand Philippine e-commerce delivery context:
+    - COD (Cash on Delivery): Requires buyer or authorized household representative to be physically present with exact cash.
+    - PH Address Dynamics: Informal landmarks (Barangay, Purok, Sitio, Subdivision, sari-sari store, gate color, missing house/unit number).
+    - Polite SMS Tone: Taglish/English polite SMS prompt for Philippines last-mile rider ("Hi! Shopee Express rider Juan po...").
+
+    Analyze customer delivery history for Shopee Express PH:
     - Customer Name: {item['customer_name']}
     - Address: {item['address']}
-    - Payment: {item['payment_method']}
+    - Landmark: {item.get('landmark', 'N/A')}
+    - Payment Method: {item['payment_method']}
     - Customer Tier: {customer_hist['customer_tier']}
     - Total Past Parcels: {customer_hist['total_past_parcels']}
     - Personal Success Rate: {customer_hist['personal_success_rate']}%
@@ -170,9 +177,9 @@ def get_parcel_details(tracking_no: str):
     - Customer Personal History Note: {customer_hist['ai_personalized_insight']}
     
     Respond in JSON only with keys:
-    1. "address_issue": Short description of personal customer risk
-    2. "sms_prompt": Personalized polite SMS draft asking for confirmation or landmark
-    3. "recommended_time_slot": Personalized optimal 2-hour delivery window (e.g. "3:00 PM - 5:00 PM")
+    1. "address_issue": Short description of PH delivery risk (missing unit, COD availability, barangay landmark)
+    2. "sms_prompt": Polite Taglish/English SMS prompt for SPX rider asking for landmark or unit confirmation
+    3. "recommended_time_slot": Personalized optimal 2-hour delivery window (e.g. "3:00 PM – 5:00 PM")
     """
 
     llm_output = {
