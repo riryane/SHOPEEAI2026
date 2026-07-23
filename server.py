@@ -8,9 +8,35 @@ Optimal Customer Parcel History Analytics (8-24 parcels/user), and Mistral AI LL
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import os
 import json
 import requests
+import csv
+
+def parse_csv_val(val):
+    if val is None or val == '':
+        return None
+    val_str = str(val).strip()
+    if val_str.lower() == 'true': return True
+    if val_str.lower() == 'false': return False
+    try:
+        if '.' in val_str:
+            return float(val_str)
+        return int(val_str)
+    except ValueError:
+        return val_str
+
+def load_csv_file(filepath):
+    if not os.path.exists(filepath):
+        return []
+    with open(filepath, mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        return [{k: parse_csv_val(v) for k, v in row.items()} for row in reader]
+
+DATASET_PARCEL_HISTORY = load_csv_file("datasets/parcel_history.csv")
+DATASET_HUB_OPERATIONS = load_csv_file("datasets/hub_daily_operations.csv")
 
 app = FastAPI(title="Shopee Express AI Risk Scoring API", version="1.0.0")
 
@@ -146,6 +172,14 @@ def health_check():
         "history_sample_distribution": "8 to 24 parcels per user (Optimal)"
     }
 
+@app.get("/api/v1/dataset/parcels")
+def get_dataset_parcels():
+    return DATASET_PARCEL_HISTORY
+
+@app.get("/api/v1/dataset/hub_operations")
+def get_dataset_hub_operations():
+    return DATASET_HUB_OPERATIONS
+
 @app.get("/api/v1/parcels")
 def get_all_parcels():
     return list(PARCEL_DATABASE.values())
@@ -210,6 +244,26 @@ def get_parcel_details(tracking_no: str):
         "ai_analysis": llm_output
     }
 
+# Serve static assets
+if os.path.exists("assets"):
+    app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+
+@app.get("/")
+def read_root():
+    if os.path.exists("ops-dashboard.html"):
+        return FileResponse("ops-dashboard.html")
+    elif os.path.exists("dashboard.html"):
+        return FileResponse("dashboard.html")
+    return {"message": "Shopee Express AI Risk Scoring API is running"}
+
+@app.get("/{page_name}.html")
+def read_html(page_name: str):
+    file_path = f"{page_name}.html"
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    raise HTTPException(status_code=404, detail="Page not found")
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+

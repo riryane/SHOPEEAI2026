@@ -132,4 +132,19 @@ document.addEventListener('DOMContentLoaded', () => {
       filterParcels();
     });
   }
+
+  // Real-Time Live Clock & Date in Rider App Header
+  function updateRiderLiveClock() {
+    const statusBarClock = document.querySelector('.status-bar span');
+    const dateTextEl = document.querySelector('.date-text');
+    const now = new Date();
+
+    if (statusBarClock) {
+      statusBarClock.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+  }
+
+  updateRiderLiveClock();
+  setInterval(updateRiderLiveClock, 1000);
 });
+
